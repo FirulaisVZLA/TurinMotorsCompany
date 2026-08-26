@@ -58,17 +58,19 @@ body {
 .diagonal-stripe {
   height: 30rem;
   background-repeat: repeat;
+  /* Líneas al triple de grosor (2px -> 6px) que la versión anterior, mismos
+     huecos de 38px entre ellas -- pedido del cliente el 2026-08-26. */
   background-image: repeating-linear-gradient(
     var(--stripe-angle, 135deg),
     transparent 0 38px,
-    color-mix(in srgb, var(--color-accent) 16%, transparent) 38px 40px,
-    transparent 40px 78px,
-    color-mix(in srgb, var(--color-accent-cyan) 16%, transparent) 78px 80px,
-    transparent 80px 118px,
-    color-mix(in srgb, var(--color-accent-lime) 16%, transparent) 118px 120px,
-    transparent 120px 158px,
-    color-mix(in srgb, var(--color-accent-yellow) 18%, transparent) 158px 160px,
-    transparent 160px 200px
+    color-mix(in srgb, var(--color-accent) 16%, transparent) 38px 44px,
+    transparent 44px 82px,
+    color-mix(in srgb, var(--color-accent-cyan) 16%, transparent) 82px 88px,
+    transparent 88px 126px,
+    color-mix(in srgb, var(--color-accent-lime) 16%, transparent) 126px 132px,
+    transparent 132px 170px,
+    color-mix(in srgb, var(--color-accent-yellow) 18%, transparent) 170px 176px,
+    transparent 176px 214px
   );
 }
 .diagonal-stripe--b {
