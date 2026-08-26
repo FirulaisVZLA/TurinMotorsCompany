@@ -11,13 +11,16 @@ const { id, images } = Astro.props;
 
 {images.length > 0 && (
   <div class="gallery" data-gallery-id={id}>
-    <div class="relative aspect-video w-full overflow-hidden rounded-xl bg-neutral-100">
+    <div
+      class="gallery-frame relative mx-auto w-fit max-w-full overflow-hidden rounded-xl bg-neutral-100"
+      style="height: min(60vh, 30rem);"
+    >
       {images.map((img, i) => (
         <img
           src={img.src}
           alt={img.alt}
-          class="gallery-slide absolute inset-0 h-full w-full object-contain transition-opacity duration-200"
-          class:list={[i === 0 ? "opacity-100" : "opacity-0 pointer-events-none"]}
+          class="gallery-slide h-full w-auto object-contain"
+          class:list={[i === 0 ? "block" : "hidden"]}
           data-index={i}
           loading={i === 0 ? "eager" : "lazy"}
         />
@@ -68,6 +71,10 @@ const { id, images } = Astro.props;
 <script>
   // Navegación de galería SOLO por clic (flechas y miniaturas) — nunca
   // auto-avance al pasar el mouse, el usuario controla cuánto ve cada foto.
+  // El marco (.gallery-frame) usa w-fit: se ajusta al ancho real de la foto
+  // visible (alto fijo, ancho automático) en vez de forzar una caja 16:9
+  // fija, así no queda espacio en blanco cuando una foto no es exactamente
+  // panorámica.
   function setupGallery(root: HTMLElement) {
     const slides = Array.from(root.querySelectorAll<HTMLImageElement>(".gallery-slide"));
     const thumbs = Array.from(root.querySelectorAll<HTMLButtonElement>(".gallery-thumb"));
@@ -76,15 +83,15 @@ const { id, images } = Astro.props;
     function show(index: number) {
       if (index < 0) index = slides.length - 1;
       if (index >= slides.length) index = 0;
-      slides[current]?.classList.add("opacity-0", "pointer-events-none");
-      slides[current]?.classList.remove("opacity-100");
+      slides[current]?.classList.add("hidden");
+      slides[current]?.classList.remove("block");
       thumbs[current]?.classList.remove("border-accent");
       thumbs[current]?.classList.add("border-transparent");
 
       current = index;
 
-      slides[current]?.classList.remove("opacity-0", "pointer-events-none");
-      slides[current]?.classList.add("opacity-100");
+      slides[current]?.classList.remove("hidden");
+      slides[current]?.classList.add("block");
       thumbs[current]?.classList.add("border-accent");
       thumbs[current]?.classList.remove("border-transparent");
     }

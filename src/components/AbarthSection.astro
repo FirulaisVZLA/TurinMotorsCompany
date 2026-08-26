@@ -22,18 +22,12 @@ const { model } = Astro.props;
       loop
       playsinline
     ></video>
-    <div class="absolute inset-0 bg-gradient-to-b from-abarth-bg/70 via-abarth-bg/40 to-abarth-bg"></div>
-
-    <div class="relative z-10 mx-auto max-w-3xl px-4 text-center">
-      <h2 class="text-3xl sm:text-5xl font-bold">FIAT Abarth</h2>
-      <p class="mt-3 text-abarth-yellow font-medium uppercase tracking-wide text-sm sm:text-base">
-        Sección especial · rendimiento italiano
-      </p>
-    </div>
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-abarth-bg/30 to-abarth-bg"></div>
   </div>
 
   <div class="py-16 px-4 sm:px-6 lg:px-8">
     <div class="mx-auto max-w-5xl abarth-gallery">
+      <h2 class="text-2xl sm:text-3xl font-bold text-white mb-6">FIAT Abarth</h2>
       <Gallery id={model.slug} images={model.gallery} />
 
       {model.videos && model.videos.length > 0 && (
