@@ -1,10 +1,11 @@
 ---
 import { siteInfo } from "../data/site";
 
-// El iframe embebido usa búsqueda por texto de dirección (sin API key);
-// el link corto de Google Maps que dio el cliente (siteInfo.mapsUrl) no
-// sirve como src de iframe -- se usa aparte como botón "Abrir en Maps".
-const mapEmbedSrc = `https://maps.google.com/maps?q=${encodeURIComponent(siteInfo.addressText)}&output=embed`;
+// El iframe embebido usa las coordenadas exactas del pin (sin API key); el
+// link corto de Google Maps que dio el cliente (siteInfo.mapsUrl) no sirve
+// como src de iframe -- se usa aparte como botón "Abrir en Maps", y sus
+// coordenadas ya resueltas alimentan el embed para que apunte al pin real.
+const mapEmbedSrc = `https://maps.google.com/maps?q=${siteInfo.mapsLat},${siteInfo.mapsLng}&z=17&output=embed`;
 
 const dayNames: Record<string, string> = {
   Monday: "Lunes",

@@ -18,6 +18,12 @@ export const siteInfo = {
 
   addressText: "Av. Juncal Sur, Maturín 6201, Monagas, Venezuela",
   mapsUrl: "https://maps.app.goo.gl/chBLPev1Yj5qwdbAA?g_st=ic",
+  // Coordenadas exactas del pin de Turín Motors en Google Maps, resueltas
+  // del link corto de arriba (mismo ftid 0x8c3347001cee60cd:0x57bb9c2a4993db58
+  // que ya traía "contacto fiat.docx") -- se usan para el mapa embebido, más
+  // preciso que buscar por texto de dirección.
+  mapsLat: 9.7337862,
+  mapsLng: -63.183595,
 
   // TODO: falta horario de atención (días + horas de mañana/tarde). Bloquea
   // el calendario de citas de "Agenda tu Servicio" -- sin esto no se pueden

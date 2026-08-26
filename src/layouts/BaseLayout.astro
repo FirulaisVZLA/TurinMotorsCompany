@@ -55,6 +55,11 @@ const ogImage = new URL("/images/logo-fiat.png", Astro.site);
         addressRegion: siteInfo.state,
         addressCountry: "VE",
       },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: siteInfo.mapsLat,
+        longitude: siteInfo.mapsLng,
+      },
       telephone: siteInfo.whatsapp,
       ...(siteInfo.openingHours
         ? {
