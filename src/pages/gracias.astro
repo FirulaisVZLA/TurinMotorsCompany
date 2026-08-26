@@ -1,0 +1,22 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { siteInfo } from "../data/site";
+---
+
+<BaseLayout
+  title="Gracias por tu solicitud — Turín Motors"
+  description="Hemos recibido tu solicitud de cotización en Turín Motors."
+  noindex
+>
+  <Header />
+  <main class="pt-32 pb-24 px-4 sm:px-6 lg:px-8 text-center">
+    <h1 class="text-3xl font-bold text-ink mb-4">¡Gracias por tu solicitud!</h1>
+    <p class="text-ink-soft max-w-xl mx-auto">{siteInfo.responseTimePromise}</p>
+    <a href="/" class="mt-8 inline-flex items-center rounded-full bg-accent px-6 py-3 text-white font-medium hover:bg-accent-dark transition-colors">
+      Volver al inicio
+    </a>
+  </main>
+  <Footer />
+</BaseLayout>

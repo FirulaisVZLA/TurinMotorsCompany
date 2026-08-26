@@ -1,0 +1,44 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { siteInfo } from "../data/site";
+---
+
+<BaseLayout
+  title="Política de Privacidad — Turín Motors"
+  description="Política de privacidad de Turín Motors, concesionario FIAT en Maturín."
+>
+  <Header />
+  <main class="pt-28 pb-20 px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-2xl">
+      <div class="mb-6 rounded-lg border border-accent/40 bg-accent/5 p-4 text-sm text-ink">
+        <strong>Borrador genérico, no es texto legal definitivo.</strong> Este documento describe de forma general qué datos recoge el sitio y para qué;
+        no ha sido redactado ni revisado por un abogado. Reemplázalo por el texto legal definitivo de {siteInfo.businessName} cuando lo tengas.
+      </div>
+
+      <h1 class="text-2xl font-bold text-ink mb-4">Política de Privacidad</h1>
+
+      <div class="space-y-4 text-ink-soft text-sm">
+        <p>
+          {siteInfo.businessName} recopila los datos que envías voluntariamente a través de los formularios de este sitio
+          (nombre, correo, teléfono, modelo de interés y mensaje) con el único fin de responder tu solicitud de cotización o
+          contacto.
+        </p>
+        <p>
+          Estos datos se almacenan de forma privada y no son visibles públicamente en el sitio. No se venden ni se comparten
+          con terceros distintos de los proveedores técnicos usados para operar el sitio y procesar los formularios.
+        </p>
+        <p>
+          Si dejas una reseña, tu nombre, comentario y calificación pueden publicarse en el sitio únicamente después de ser
+          revisados y aprobados por {siteInfo.businessName}.
+        </p>
+        <p>
+          Puedes solicitar la eliminación de tus datos escribiendo a través de nuestros canales de contacto listados en la
+          sección Contacto.
+        </p>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

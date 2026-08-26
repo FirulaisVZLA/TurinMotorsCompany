@@ -1,0 +1,55 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import AboutUs from "../components/AboutUs.astro";
+import ModelSection from "../components/ModelSection.astro";
+import StubSection from "../components/StubSection.astro";
+import Contact from "../components/Contact.astro";
+import Footer from "../components/Footer.astro";
+import StickyMobileCta from "../components/StickyMobileCta.astro";
+import { models } from "../data/models";
+---
+
+<BaseLayout
+  title="Turín Motors — Concesionario FIAT en Maturín, Monagas"
+  description="Turín Motors, concesionario oficial FIAT en Maturín, Monagas, Venezuela. Modelos, cotización y servicio técnico."
+>
+  <Header />
+  <main>
+    <Hero />
+    <AboutUs />
+
+    <div id="modelos">
+      {models.map((model) => <ModelSection model={model} />)}
+    </div>
+
+    <StubSection
+      id="resenas"
+      title="Lo que dicen nuestros clientes"
+      note="Sección en construcción: testimonios y formulario de reseñas (pendiente conectar Supabase)."
+    />
+
+    <StubSection
+      id="cotizacion"
+      title="Cotización"
+      note="Sección en construcción: formulario de cotización en 2 pasos + tarjetas de financiamiento (pendiente datos de financiamiento del cliente)."
+    />
+
+    <StubSection
+      id="servicio"
+      title="Agenda tu Servicio"
+      note="Sección en construcción: por confirmar con el cliente el alcance (agenda de citas de taller, como en el sitio de Kaiyi, u otro formato)."
+    />
+
+    <StubSection
+      id="faq"
+      title="Preguntas Frecuentes"
+      note="Sección en construcción: pendiente que el cliente envíe las preguntas y respuestas reales."
+    />
+
+    <Contact />
+  </main>
+  <Footer />
+  <StickyMobileCta />
+</BaseLayout>

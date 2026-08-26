@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+/*
+ * Paleta derivada del logo oficial de FIAT (rebrand 2024, archivo
+ * fiat2024_0__1739377919.png): 4 colores muestreados por pixel del logo.
+ * - accent = rosa/coral de la "F" (#fd497b): único color usado en botones
+ *   y CTAs, el que mejor contraste da con texto blanco.
+ * - accent-cyan/lime/yellow: los otros 3 colores del logo (I, A, T), solo
+ *   para acentos decorativos puntuales (iconos, insignias), nunca para
+ *   botones o texto largo por su bajo contraste con blanco.
+ * - ink: gris casi negro neutro para texto/header/footer (el logo de FIAT
+ *   no tiene negro propio; se usa un neutro estándar para look limpio).
+ */
+@theme {
+  --color-ink: #171717;
+  --color-ink-soft: #4b4b4b;
+
+  --color-accent: #fd497b;
+  --color-accent-dark: #e02f60;
+
+  --color-accent-cyan: #00c9ff;
+  --color-accent-lime: #9cc400;
+  --color-accent-yellow: #ffe612;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: white;
+  color: var(--color-ink);
+}
+
+@media (max-width: 63.99rem) {
+  body {
+    padding-bottom: 4.5rem;
+  }
+}

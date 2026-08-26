@@ -1,0 +1,80 @@
+---
+import "../styles/global.css";
+import { siteInfo } from "../data/site";
+import Analytics from "@vercel/analytics/astro";
+import SpeedInsights from "@vercel/speed-insights/astro";
+
+interface Props {
+  title: string;
+  description: string;
+  noindex?: boolean;
+}
+
+const { title, description, noindex = false } = Astro.props;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+// TODO: reemplazar por una imagen OG real 1200x630 una vez el cliente
+// confirme el material grafico (ver lección en el sitio de Kaiyi: recortar
+// con sharp anclando al borde que tenga el contenido importante).
+const ogImage = new URL("/images/logo-fiat.png", Astro.site);
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/images/logo-fiat.png" />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "AutomotiveBusiness",
+      name: siteInfo.businessName,
+      description: `Concesionario ${siteInfo.brand} en ${siteInfo.city}, ${siteInfo.state}, ${siteInfo.country}.`,
+      url: Astro.site,
+      image: ogImage,
+      ...(siteInfo.addressText
+        ? {
+            address: {
+              "@type": "PostalAddress",
+              streetAddress: siteInfo.addressText,
+              addressLocality: siteInfo.city,
+              addressRegion: siteInfo.state,
+              addressCountry: "VE",
+            },
+          }
+        : {}),
+      ...(siteInfo.phone ? { telephone: siteInfo.phone } : {}),
+      ...(siteInfo.openingHours
+        ? {
+            openingHoursSpecification: siteInfo.openingHours.map((h) => ({
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: h.days,
+              opens: h.hours.split("-")[0]?.trim(),
+              closes: h.hours.split("-")[1]?.trim(),
+            })),
+          }
+        : {}),
+      sameAs: [siteInfo.social.instagram, siteInfo.social.tiktok].filter(Boolean),
+    })} />
+  </head>
+  <body class="font-sans">
+    <slot />
+    <Analytics />
+    <SpeedInsights />
+  </body>
+</html>

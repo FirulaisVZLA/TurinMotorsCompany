@@ -1,0 +1,15 @@
+---
+import { siteInfo } from "../data/site";
+---
+
+<footer class="py-8 px-4 sm:px-6 lg:px-8 border-t border-neutral-200 bg-white">
+  <div class="mx-auto max-w-5xl flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-ink-soft">
+    <p>© <span id="footer-year">2026</span> {siteInfo.businessName} — Concesionario {siteInfo.brand} en {siteInfo.city}.</p>
+    <a href="/politica-de-privacidad" class="hover:text-accent transition-colors">Política de Privacidad</a>
+  </div>
+</footer>
+
+<script>
+  const el = document.getElementById("footer-year");
+  if (el) el.textContent = String(new Date().getFullYear());
+</script>

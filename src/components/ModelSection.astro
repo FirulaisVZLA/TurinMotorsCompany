@@ -1,0 +1,100 @@
+---
+import type { ModelData } from "../data/models";
+import Gallery from "./Gallery.astro";
+
+interface Props {
+  model: ModelData;
+}
+
+const { model } = Astro.props;
+---
+
+<section id={model.slug} class="scroll-mt-20 py-16 px-4 sm:px-6 lg:px-8 border-t border-neutral-200">
+  <div class="mx-auto max-w-5xl">
+    <h2 class="text-2xl sm:text-3xl font-bold text-ink mb-6">FIAT {model.name}</h2>
+
+    <Gallery id={model.slug} images={model.gallery} />
+
+    {model.videos && model.videos.length > 0 && (
+      <div class="mt-8">
+        <h3 class="text-lg font-semibold text-ink mb-3">Características destacadas</h3>
+        <div class="grid sm:grid-cols-2 gap-4">
+          {model.videos.map((v) => (
+            <div>
+              <video src={v.src} controls class="w-full rounded-lg bg-black aspect-video"></video>
+              <p class="mt-2 text-sm text-ink-soft">{v.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {model.fichaTecnicaPdf ? (
+      <a
+        href={model.fichaTecnicaPdf}
+        target="_blank"
+        rel="noopener"
+        class="mt-8 inline-flex items-center gap-2 rounded-full border border-ink px-5 py-2.5 text-sm font-medium text-ink hover:bg-ink hover:text-white transition-colors"
+      >
+        Descargar ficha técnica (PDF)
+      </a>
+    ) : (
+      <p class="mt-8 text-sm text-ink-soft italic">Ficha técnica en PDF: pendiente (el cliente no la ha proporcionado todavía).</p>
+    )}
+
+    <div class="mt-8 divide-y divide-neutral-200 border-y border-neutral-200">
+      <details class="group py-4">
+        <summary class="flex cursor-pointer items-center justify-between font-medium text-ink">
+          Seguridad
+          <span class="text-ink-soft transition-transform group-open:rotate-45">+</span>
+        </summary>
+        <div class="mt-3 text-ink-soft text-sm">
+          {model.seguridad && model.seguridad.length > 0 ? (
+            <ul class="list-disc pl-5 space-y-1">
+              {model.seguridad.map((item) => <li>{item}</li>)}
+            </ul>
+          ) : (
+            <p class="italic">Pendiente: el cliente no ha proporcionado el detalle de seguridad de este modelo.</p>
+          )}
+        </div>
+      </details>
+
+      <details class="group py-4">
+        <summary class="flex cursor-pointer items-center justify-between font-medium text-ink">
+          Garantía
+          <span class="text-ink-soft transition-transform group-open:rotate-45">+</span>
+        </summary>
+        <div class="mt-3 text-ink-soft text-sm">
+          {model.garantia ? (
+            <p>{model.garantia}</p>
+          ) : (
+            <p class="italic">Pendiente: falta el texto legal de garantía de este modelo.</p>
+          )}
+        </div>
+      </details>
+    </div>
+
+    <div class="mt-8">
+      <h3 class="text-lg font-semibold text-ink mb-3">Carta de colores</h3>
+      {model.colores && model.colores.length > 0 ? (
+        <div class="grid sm:grid-cols-2 gap-6">
+          {model.colores.map((c) => (
+            <div class="flex items-center gap-3">
+              {c.image && <img src={c.image} alt={c.name} class="h-16 w-24 object-cover rounded" />}
+              <div class="flex items-center gap-2">
+                <span class="h-4 w-4 rounded-full border border-neutral-300" style={`background:${c.hex}`}></span>
+                <span class="text-sm text-ink">{c.name} <span class="text-ink-soft">({c.hex})</span></span>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p class="text-sm text-ink-soft italic">Pendiente: falta la carta de colores (nombre, código hex y foto) de este modelo.</p>
+      )}
+    </div>
+
+    <a href="#cotizacion" class="mt-10 inline-flex items-center gap-1 text-accent font-medium hover:text-accent-dark transition-colors">
+      ¿Te interesa el {model.name}? Cotízalo aquí →
+    </a>
+  </div>
+</section>
