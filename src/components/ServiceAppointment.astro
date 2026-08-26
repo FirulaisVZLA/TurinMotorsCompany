@@ -1,0 +1,24 @@
+---
+import AppointmentForm from "./AppointmentForm.astro";
+import PartsRequestForm from "./PartsRequestForm.astro";
+---
+
+<section id="servicio" class="scroll-mt-20 py-16 px-4 sm:px-6 lg:px-8 border-t border-neutral-200">
+  <div class="mx-auto max-w-6xl">
+    <h2 class="text-center text-2xl sm:text-3xl font-bold text-ink">
+      Agenda tu <span class="text-accent">Servicio</span>
+    </h2>
+    <p class="mx-auto mt-3 max-w-2xl text-center text-ink-soft">
+      El día y la hora que mejor te convenga. Reserva tu cita de taller o pide el repuesto que necesitas.
+    </p>
+
+    <div class="mt-10 grid gap-8 lg:grid-cols-5 lg:gap-10">
+      <div class="lg:col-span-3">
+        <AppointmentForm />
+      </div>
+      <div class="lg:col-span-2">
+        <PartsRequestForm />
+      </div>
+    </div>
+  </div>
+</section>

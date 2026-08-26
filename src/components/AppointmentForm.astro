@@ -1,0 +1,484 @@
+---
+import { siteInfo } from "../data/site";
+import { models } from "../data/models";
+
+// El ID de Formspree se lee de la variable de entorno (mismo patrón que el
+// resto de formularios del sitio). Nunca se hardcodea en el código.
+const formspreeId = import.meta.env.PUBLIC_FORMSPREE_APPOINTMENTS_ID ?? "";
+const endpoint = formspreeId ? `https://formspree.io/f/${formspreeId}` : "";
+
+const pad = (n: number) => String(n).padStart(2, "0");
+
+/** Genera horas de inicio (ej. "08:00") entre `opens` y `closes`, cada `stepMinutes`. */
+function generateSlots(opens: string, closes: string, stepMinutes: number): string[] {
+  const [openH, openM] = opens.split(":").map(Number);
+  const [closeH, closeM] = closes.split(":").map(Number);
+  const slots: string[] = [];
+  let minutes = openH * 60 + openM;
+  const closeMinutes = closeH * 60 + closeM;
+  while (minutes + stepMinutes <= closeMinutes) {
+    slots.push(`${pad(Math.floor(minutes / 60))}:${pad(minutes % 60)}`);
+    minutes += stepMinutes;
+  }
+  return slots;
+}
+
+// El calendario necesita el horario real de atención (siteInfo.openingHours)
+// para saber qué días/horas ofrecer -- todavía no lo tenemos (ver TODO en
+// src/data/site.ts), así que por ahora se muestra un aviso en su lugar en
+// vez de inventar un horario de relleno.
+const hasHours = siteInfo.openingHours !== null;
+const timeSlots = hasHours
+  ? [
+      ...generateSlots(siteInfo.openingHours!.morning.opens, siteInfo.openingHours!.morning.closes, 60),
+      ...generateSlots(siteInfo.openingHours!.afternoon.opens, siteInfo.openingHours!.afternoon.closes, 60),
+    ]
+  : [];
+
+const dayNameToNumber: Record<string, number> = {
+  Sunday: 0,
+  Monday: 1,
+  Tuesday: 2,
+  Wednesday: 3,
+  Thursday: 4,
+  Friday: 5,
+  Saturday: 6,
+};
+const allowedDays = hasHours ? siteInfo.openingHours!.days.map((d) => dayNameToNumber[d]) : [];
+
+const modelOptions = models.map((m) => m.name);
+---
+
+<div class="rounded-2xl bg-white p-5 shadow-lg sm:p-8 border border-neutral-200">
+  <h3 class="text-xl font-bold text-ink sm:text-2xl">Reserva tu cita</h3>
+  <p class="mt-2 text-sm text-ink-soft">
+    {hasHours ? `Disponible ${siteInfo.openingHours!.label}.` : "El horario de atención se está confirmando -- muy pronto podrás elegir día y hora aquí."}
+  </p>
+
+  <form id="appointment-form" class="mt-6 space-y-5" data-endpoint={endpoint} novalidate>
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label for="af-name" class="mb-1 block text-sm font-medium text-ink">
+          Nombre completo <span class="text-accent" aria-hidden="true">*</span>
+        </label>
+        <input id="af-name" name="nombre" type="text" required autocomplete="name"
+          class="w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/20" />
+      </div>
+      <div>
+        <label for="af-email" class="mb-1 block text-sm font-medium text-ink">
+          Correo electrónico <span class="text-accent" aria-hidden="true">*</span>
+        </label>
+        <input id="af-email" name="email" type="email" required autocomplete="email"
+          class="w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/20" />
+      </div>
+      <div>
+        <label for="af-phone" class="mb-1 block text-sm font-medium text-ink">
+          Teléfono <span class="text-accent" aria-hidden="true">*</span>
+        </label>
+        <input id="af-phone" name="telefono" type="tel" required autocomplete="tel" placeholder="+58 424 0000000"
+          class="w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/20" />
+      </div>
+      <div>
+        <label for="af-model" class="mb-1 block text-sm font-medium text-ink">
+          Modelo del vehículo <span class="text-accent" aria-hidden="true">*</span>
+        </label>
+        <select id="af-model" name="modelo" required
+          class="w-full rounded-lg border border-neutral-300 bg-white px-4 py-2.5 text-sm focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/20">
+          <option value="" disabled selected>Selecciona un modelo</option>
+          {modelOptions.map((name) => <option value={name}>FIAT {name}</option>)}
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+      <div>
+        <label for="af-service" class="mb-1 block text-sm font-medium text-ink">
+          Tipo de servicio <span class="text-accent" aria-hidden="true">*</span>
+        </label>
+        <select id="af-service" name="tipo_servicio" required
+          class="w-full rounded-lg border border-neutral-300 bg-white px-4 py-2.5 text-sm focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/20">
+          <option value="" disabled selected>Selecciona una opción</option>
+          <option value="Mantenimiento preventivo">Mantenimiento preventivo</option>
+          <option value="Revisión / diagnóstico">Revisión / diagnóstico</option>
+          <option value="Garantía">Garantía</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+    </div>
+
+    {hasHours ? (
+      <div>
+        <span class="mb-1 block text-sm font-medium text-ink">
+          Fecha y hora de la cita <span class="text-accent" aria-hidden="true">*</span>
+        </span>
+
+        <div class="rounded-xl border border-neutral-200 p-4 sm:p-5">
+          <div id="af-cal-month-view">
+            <div class="flex items-center justify-between gap-3">
+              <button type="button" id="af-cal-prev" aria-label="Mes anterior"
+                class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-neutral-300 text-ink-soft transition hover:border-ink hover:text-ink disabled:cursor-not-allowed disabled:opacity-30">
+                ‹
+              </button>
+              <div class="text-center">
+                <p id="af-cal-label" class="text-lg font-extrabold capitalize text-ink">&nbsp;</p>
+                <p id="af-cal-sublabel" class="text-xs text-ink-soft">&nbsp;</p>
+              </div>
+              <button type="button" id="af-cal-next" aria-label="Mes siguiente"
+                class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-neutral-300 text-ink-soft transition hover:border-ink hover:text-ink">
+                ›
+              </button>
+            </div>
+
+            <div class="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-ink-soft">
+              <span class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-sm bg-accent" aria-hidden="true"></span> Seleccionado</span>
+              <span class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-sm border border-neutral-400 bg-white" aria-hidden="true"></span> Con cupo</span>
+              <span class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-sm bg-neutral-200" aria-hidden="true"></span> Sin cupo</span>
+            </div>
+
+            <div class="mt-4 grid grid-cols-5 gap-1.5 text-center text-[0.65rem] font-bold uppercase tracking-wide text-neutral-400 sm:text-xs">
+              <span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span>
+            </div>
+            <div id="af-cal-grid" class="mt-1.5 grid grid-cols-5 gap-1.5"></div>
+          </div>
+
+          <div id="af-cal-day-view" class="hidden">
+            <button type="button" id="af-cal-back" class="inline-flex items-center gap-1.5 text-sm font-semibold text-ink transition hover:text-accent">
+              ← Cambiar fecha
+            </button>
+            <p id="af-cal-day-label" class="mt-3 text-base font-bold capitalize text-ink">&nbsp;</p>
+            <div id="af-times" class="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4" role="radiogroup" aria-label="Hora de la cita"></div>
+            <p id="af-times-hint" class="mt-2 text-xs text-neutral-400"></p>
+          </div>
+        </div>
+
+        <p id="af-cal-error" class="mt-1 hidden text-xs font-medium text-red-600">
+          Elige una fecha y una hora para tu cita.
+        </p>
+
+        <input id="af-date" name="fecha" type="hidden" />
+        <input id="af-time" name="hora" type="hidden" />
+      </div>
+    ) : (
+      <div class="rounded-xl border border-dashed border-neutral-300 p-4 text-sm text-ink-soft italic">
+        Pendiente: falta confirmar el horario de atención para poder mostrar los cupos disponibles. Mientras tanto,
+        escríbenos por WhatsApp para coordinar tu cita directamente.
+      </div>
+    )}
+
+    <div>
+      <label for="af-message" class="mb-1 block text-sm font-medium text-ink">Mensaje (opcional)</label>
+      <textarea id="af-message" name="mensaje" rows="3" placeholder="Cuéntanos qué necesita tu vehículo…"
+        class="w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/20"></textarea>
+    </div>
+
+    <button type="submit" disabled={!hasHours}
+      class="w-full rounded-full bg-accent px-8 py-3.5 font-bold text-white transition hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-50">
+      Agendar cita
+    </button>
+
+    <p id="appointment-error" class="hidden rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700" role="alert">
+      No pudimos agendar tu cita. Intenta de nuevo o escríbenos por WhatsApp ({siteInfo.whatsapp}).
+    </p>
+  </form>
+</div>
+
+{hasHours && (
+  <>
+    <script type="application/json" id="af-allowed-days" set:html={JSON.stringify(allowedDays)} />
+    <script type="application/json" id="af-time-slots" set:html={JSON.stringify(timeSlots)} />
+
+    <script>
+      import { supabase } from "../lib/supabase";
+
+      const allowedDaysEl = document.getElementById("af-allowed-days");
+      const allowedDays: number[] = allowedDaysEl ? JSON.parse(allowedDaysEl.textContent ?? "[]") : [];
+      const timeSlotsEl = document.getElementById("af-time-slots");
+      const timeSlots: string[] = timeSlotsEl ? JSON.parse(timeSlotsEl.textContent ?? "[]") : [];
+
+      const monthView = document.getElementById("af-cal-month-view");
+      const dayView = document.getElementById("af-cal-day-view");
+      const grid = document.getElementById("af-cal-grid");
+      const monthLabel = document.getElementById("af-cal-label");
+      const monthSubLabel = document.getElementById("af-cal-sublabel");
+      const prevBtn = document.getElementById("af-cal-prev") as HTMLButtonElement | null;
+      const nextBtn = document.getElementById("af-cal-next");
+      const backBtn = document.getElementById("af-cal-back");
+      const dayLabel = document.getElementById("af-cal-day-label");
+      const timesWrap = document.getElementById("af-times");
+      const timesHint = document.getElementById("af-times-hint");
+      const calError = document.getElementById("af-cal-error");
+      const dateInput = document.getElementById("af-date") as HTMLInputElement | null;
+      const timeInput = document.getElementById("af-time") as HTMLInputElement | null;
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      let viewYear = today.getFullYear();
+      let viewMonth = today.getMonth();
+      let selectedDateStr: string | null = null;
+      let occupied = new Map<string, Set<string>>();
+
+      const pad = (n: number) => String(n).padStart(2, "0");
+      const toDateStr = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+
+      const monthFormatter = new Intl.DateTimeFormat("es-VE", { month: "long", year: "numeric" });
+      const dayFormatter = new Intl.DateTimeFormat("es-VE", { weekday: "long", day: "numeric", month: "long" });
+
+      // Consulta la vista pública "horarios_ocupados" (solo fecha/hora, sin
+      // datos personales) para todo el mes visible, en una sola llamada.
+      async function loadOccupiedForMonth(year: number, month: number) {
+        const start = toDateStr(new Date(year, month, 1));
+        const end = toDateStr(new Date(year, month + 1, 0));
+        const { data, error } = await supabase
+          .from("horarios_ocupados")
+          .select("fecha_cita, hora_cita")
+          .gte("fecha_cita", start)
+          .lte("fecha_cita", end);
+
+        const map = new Map<string, Set<string>>();
+        if (error) {
+          console.error("Error consultando horarios ocupados:", error);
+        } else {
+          for (const row of (data ?? []) as { fecha_cita: string; hora_cita: string }[]) {
+            if (!map.has(row.fecha_cita)) map.set(row.fecha_cita, new Set());
+            map.get(row.fecha_cita)!.add(row.hora_cita.slice(0, 5));
+          }
+        }
+        return map;
+      }
+
+      function renderMonth() {
+        if (!grid || !monthLabel || !monthSubLabel) return;
+
+        monthLabel.textContent = monthFormatter.format(new Date(viewYear, viewMonth, 1));
+
+        const firstOfMonth = new Date(viewYear, viewMonth, 1);
+        const lastOfMonth = new Date(viewYear, viewMonth + 1, 0);
+
+        const firstWeekday = firstOfMonth.getDay();
+        const startOffset = firstWeekday === 0 ? 6 : firstWeekday - 1;
+        const gridStart = new Date(firstOfMonth);
+        gridStart.setDate(gridStart.getDate() - startOffset);
+
+        const lastWeekday = lastOfMonth.getDay();
+        const endOffset = lastWeekday === 0 ? 0 : 7 - lastWeekday;
+        const gridEnd = new Date(lastOfMonth);
+        gridEnd.setDate(gridEnd.getDate() + endOffset);
+
+        grid.innerHTML = "";
+        let availableDays = 0;
+
+        for (let d = new Date(gridStart); d <= gridEnd; d.setDate(d.getDate() + 1)) {
+          const dow = d.getDay();
+          if (dow === 0 || dow === 6) continue;
+
+          const dateStr = toDateStr(d);
+          const inMonth = d.getMonth() === viewMonth;
+
+          const cell = document.createElement("button");
+          cell.type = "button";
+          cell.className = "flex flex-col items-center justify-center rounded-lg border px-1 py-2.5 transition";
+
+          const dayNum = document.createElement("span");
+          dayNum.className = "block text-base font-extrabold";
+          dayNum.textContent = String(d.getDate());
+          const status = document.createElement("span");
+          status.className = "mt-0.5 block text-[0.6rem] font-bold uppercase tracking-tight";
+
+          cell.appendChild(dayNum);
+          cell.appendChild(status);
+
+          if (!inMonth) {
+            cell.disabled = true;
+            cell.classList.add("border-transparent", "text-transparent");
+            grid.appendChild(cell);
+            continue;
+          }
+
+          const isPast = d < tomorrow;
+
+          if (isPast || !allowedDays.includes(dow)) {
+            status.textContent = "—";
+            cell.disabled = true;
+            cell.classList.add("border-neutral-100", "text-neutral-300");
+          } else {
+            const taken = occupied.get(dateStr)?.size ?? 0;
+            const cupos = Math.max(timeSlots.length - taken, 0);
+
+            if (dateStr === selectedDateStr) {
+              status.textContent = "Seleccionado";
+              cell.classList.add("border-accent", "bg-accent", "text-white");
+            } else if (cupos > 0) {
+              status.textContent = `${cupos} cupo${cupos === 1 ? "" : "s"}`;
+              cell.classList.add("border-neutral-300", "bg-white", "text-ink", "hover:border-accent");
+              availableDays += 1;
+              cell.addEventListener("click", () => selectDate(dateStr));
+            } else {
+              status.textContent = "Sin cupo";
+              cell.disabled = true;
+              cell.classList.add("border-neutral-200", "bg-neutral-100", "text-neutral-400");
+            }
+          }
+
+          grid.appendChild(cell);
+        }
+
+        monthSubLabel.textContent = `${availableDays} día${availableDays === 1 ? "" : "s"} hábil${availableDays === 1 ? "" : "es"} con disponibilidad`;
+
+        if (prevBtn) {
+          const firstDayThisView = new Date(viewYear, viewMonth, 1);
+          const firstDayCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+          prevBtn.disabled = firstDayThisView <= firstDayCurrentMonth;
+        }
+      }
+
+      async function goToMonth(year: number, month: number) {
+        viewYear = year;
+        viewMonth = month;
+        occupied = await loadOccupiedForMonth(viewYear, viewMonth);
+        renderMonth();
+      }
+
+      function selectDate(dateStr: string) {
+        selectedDateStr = dateStr;
+        calError?.classList.add("hidden");
+        if (dateInput) dateInput.value = dateStr;
+        if (timeInput) timeInput.value = "";
+
+        const [y, m, day] = dateStr.split("-").map(Number);
+        if (dayLabel) dayLabel.textContent = dayFormatter.format(new Date(y, m - 1, day));
+
+        renderTimes(dateStr);
+        monthView?.classList.add("hidden");
+        dayView?.classList.remove("hidden");
+      }
+
+      function renderTimes(dateStr: string) {
+        if (!timesWrap) return;
+        timesWrap.innerHTML = "";
+        const taken = occupied.get(dateStr) ?? new Set<string>();
+        let anyAvailable = false;
+
+        timeSlots.forEach((time) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.textContent = time;
+          btn.setAttribute("role", "radio");
+          btn.setAttribute("aria-checked", "false");
+
+          const isTaken = taken.has(time);
+          btn.disabled = isTaken;
+          btn.className = isTaken
+            ? "rounded-lg border border-neutral-200 bg-neutral-100 px-2 py-2 text-sm font-semibold text-neutral-300"
+            : "rounded-lg border border-neutral-300 bg-white px-2 py-2 text-sm font-semibold text-ink transition hover:border-accent";
+
+          if (!isTaken) {
+            anyAvailable = true;
+            btn.addEventListener("click", () => {
+              Array.from(timesWrap.children).forEach((el) => {
+                const isSelected = el === btn;
+                el.classList.toggle("border-accent", isSelected);
+                el.classList.toggle("bg-accent", isSelected);
+                el.classList.toggle("text-white", isSelected);
+                el.classList.toggle("border-neutral-300", !isSelected);
+                el.classList.toggle("bg-white", !isSelected);
+                el.classList.toggle("text-ink", !isSelected);
+                el.setAttribute("aria-checked", String(isSelected));
+              });
+              if (timeInput) timeInput.value = time;
+              calError?.classList.add("hidden");
+            });
+          }
+          timesWrap.appendChild(btn);
+        });
+
+        if (timesHint) {
+          timesHint.textContent = anyAvailable
+            ? "Elige la hora que prefieras."
+            : "No quedan horarios disponibles ese día, elige otra fecha.";
+        }
+      }
+
+      prevBtn?.addEventListener("click", () => {
+        const m = viewMonth === 0 ? 11 : viewMonth - 1;
+        const y = viewMonth === 0 ? viewYear - 1 : viewYear;
+        goToMonth(y, m);
+      });
+      nextBtn?.addEventListener("click", () => {
+        const m = viewMonth === 11 ? 0 : viewMonth + 1;
+        const y = viewMonth === 11 ? viewYear + 1 : viewYear;
+        goToMonth(y, m);
+      });
+      backBtn?.addEventListener("click", () => {
+        dayView?.classList.add("hidden");
+        monthView?.classList.remove("hidden");
+        renderMonth();
+      });
+
+      goToMonth(viewYear, viewMonth);
+
+      const form = document.getElementById("appointment-form") as HTMLFormElement | null;
+      const errorMsg = document.getElementById("appointment-error");
+
+      form?.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        if (!dateInput?.value || !timeInput?.value) {
+          calError?.classList.remove("hidden");
+          return;
+        }
+        if (!form.reportValidity()) return;
+
+        const endpoint = form.dataset.endpoint;
+        const formData = new FormData(form);
+
+        const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+        if (button) button.disabled = true;
+        errorMsg?.classList.add("hidden");
+
+        const supabaseInsert = supabase.from("citas").insert({
+          nombre: formData.get("nombre"),
+          correo: formData.get("email"),
+          telefono: formData.get("telefono"),
+          modelo: formData.get("modelo"),
+          tipo_servicio: formData.get("tipo_servicio"),
+          fecha_cita: formData.get("fecha"),
+          hora_cita: formData.get("hora"),
+          mensaje: formData.get("mensaje") || null,
+        });
+
+        const formspreeSubmit = endpoint
+          ? fetch(endpoint, {
+              method: "POST",
+              body: formData,
+              headers: { Accept: "application/json" },
+            }).then((response) => {
+              if (!response.ok) throw new Error(`Formspree respondió ${response.status}`);
+            })
+          : Promise.reject(new Error("PUBLIC_FORMSPREE_APPOINTMENTS_ID no configurado"));
+
+        const [supabaseResult, formspreeResult] = await Promise.allSettled([supabaseInsert, formspreeSubmit]);
+
+        if (supabaseResult.status === "rejected") {
+          console.error("Error guardando la cita en Supabase:", supabaseResult.reason);
+        } else if (supabaseResult.value.error) {
+          console.error("Error guardando la cita en Supabase:", supabaseResult.value.error);
+        }
+        if (formspreeResult.status === "rejected") {
+          console.error("Error enviando la cita a Formspree:", formspreeResult.reason);
+        }
+
+        const okSupabase = supabaseResult.status === "fulfilled" && !supabaseResult.value.error;
+        const okFormspree = formspreeResult.status === "fulfilled";
+
+        if (okSupabase || okFormspree) {
+          window.location.href = "/gracias";
+          return;
+        }
+
+        errorMsg?.classList.remove("hidden");
+        if (button) button.disabled = false;
+      });
+    </script>
+  </>
+)}

@@ -3,6 +3,7 @@ import "../styles/global.css";
 import { siteInfo } from "../data/site";
 import Analytics from "@vercel/analytics/astro";
 import SpeedInsights from "@vercel/speed-insights/astro";
+import DecorativeBackground from "../components/DecorativeBackground.astro";
 
 interface Props {
   title: string;
@@ -47,32 +48,37 @@ const ogImage = new URL("/images/logo-fiat.png", Astro.site);
       description: `Concesionario ${siteInfo.brand} en ${siteInfo.city}, ${siteInfo.state}, ${siteInfo.country}.`,
       url: Astro.site,
       image: ogImage,
-      ...(siteInfo.addressText
-        ? {
-            address: {
-              "@type": "PostalAddress",
-              streetAddress: siteInfo.addressText,
-              addressLocality: siteInfo.city,
-              addressRegion: siteInfo.state,
-              addressCountry: "VE",
-            },
-          }
-        : {}),
-      ...(siteInfo.phone ? { telephone: siteInfo.phone } : {}),
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: siteInfo.addressText,
+        addressLocality: siteInfo.city,
+        addressRegion: siteInfo.state,
+        addressCountry: "VE",
+      },
+      telephone: siteInfo.whatsapp,
       ...(siteInfo.openingHours
         ? {
-            openingHoursSpecification: siteInfo.openingHours.map((h) => ({
-              "@type": "OpeningHoursSpecification",
-              dayOfWeek: h.days,
-              opens: h.hours.split("-")[0]?.trim(),
-              closes: h.hours.split("-")[1]?.trim(),
-            })),
+            openingHoursSpecification: [
+              {
+                "@type": "OpeningHoursSpecification",
+                dayOfWeek: siteInfo.openingHours.days,
+                opens: siteInfo.openingHours.morning.opens,
+                closes: siteInfo.openingHours.morning.closes,
+              },
+              {
+                "@type": "OpeningHoursSpecification",
+                dayOfWeek: siteInfo.openingHours.days,
+                opens: siteInfo.openingHours.afternoon.opens,
+                closes: siteInfo.openingHours.afternoon.closes,
+              },
+            ],
           }
         : {}),
       sameAs: [siteInfo.social.instagram, siteInfo.social.tiktok].filter(Boolean),
     })} />
   </head>
   <body class="font-sans">
+    <DecorativeBackground />
     <slot />
     <Analytics />
     <SpeedInsights />

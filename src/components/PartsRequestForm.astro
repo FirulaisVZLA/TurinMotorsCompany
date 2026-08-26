@@ -1,0 +1,131 @@
+---
+// El ID de Formspree se lee de la variable de entorno (mismo patrón que
+// el resto de formularios del sitio). Nunca se hardcodea en el código.
+const formspreeId = import.meta.env.PUBLIC_FORMSPREE_PARTS_ID ?? "";
+const endpoint = formspreeId ? `https://formspree.io/f/${formspreeId}` : "";
+---
+
+<div class="rounded-2xl bg-white p-5 shadow-lg sm:p-8 border border-neutral-200">
+  <h3 class="text-xl font-bold text-ink sm:text-2xl">¿Necesitas un repuesto?</h3>
+  <p class="mt-2 text-sm text-ink-soft">Déjanos saber qué necesitas.</p>
+
+  <form id="parts-form" class="mt-6 space-y-5" data-endpoint={endpoint} novalidate>
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label for="pf-name" class="mb-1 block text-sm font-medium text-ink">
+          Nombre <span class="text-accent" aria-hidden="true">*</span>
+        </label>
+        <input
+          id="pf-name"
+          name="nombre"
+          type="text"
+          required
+          autocomplete="name"
+          placeholder="Nombre y apellido"
+          class="w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/20"
+        />
+      </div>
+      <div>
+        <label for="pf-phone" class="mb-1 block text-sm font-medium text-ink">
+          Teléfono <span class="text-accent" aria-hidden="true">*</span>
+        </label>
+        <input
+          id="pf-phone"
+          name="telefono"
+          type="tel"
+          required
+          autocomplete="tel"
+          placeholder="+58 424 0000000"
+          class="w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/20"
+        />
+      </div>
+    </div>
+
+    <div>
+      <label for="pf-message" class="mb-1 block text-sm font-medium text-ink">
+        Mensaje <span class="text-accent" aria-hidden="true">*</span>
+      </label>
+      <textarea
+        id="pf-message"
+        name="mensaje"
+        rows="4"
+        required
+        placeholder="Escribe aquí tu solicitud, te atenderemos a la brevedad."
+        class="w-full rounded-lg border border-neutral-300 px-4 py-2.5 text-sm focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/20"></textarea>
+    </div>
+
+    <button
+      type="submit"
+      class="w-full rounded-full bg-accent px-8 py-3 font-bold text-white transition hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-60"
+    >
+      Enviar solicitud
+    </button>
+
+    <p id="parts-error" class="hidden rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700" role="alert">
+      No pudimos enviar tu solicitud. Intenta de nuevo más tarde.
+    </p>
+  </form>
+</div>
+
+<script>
+  import { supabase } from "../lib/supabase";
+
+  const form = document.getElementById("parts-form") as HTMLFormElement | null;
+  const errorMsg = document.getElementById("parts-error");
+
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+
+    const endpoint = form.dataset.endpoint;
+    const formData = new FormData(form);
+
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    if (button) button.disabled = true;
+    errorMsg?.classList.add("hidden");
+
+    // Mismo patrón que el resto de formularios del sitio: se guarda en
+    // Supabase y se envía a Formspree en paralelo; con que uno de los dos
+    // funcione, la solicitud no se pierde.
+    const supabaseInsert = supabase.from("solicitudes_repuestos").insert({
+      nombre: formData.get("nombre"),
+      telefono: formData.get("telefono"),
+      mensaje: formData.get("mensaje"),
+    });
+
+    const formspreeSubmit = endpoint
+      ? fetch(endpoint, {
+          method: "POST",
+          body: formData,
+          headers: { Accept: "application/json" },
+        }).then((response) => {
+          if (!response.ok) throw new Error(`Formspree respondió ${response.status}`);
+        })
+      : Promise.reject(new Error("PUBLIC_FORMSPREE_PARTS_ID no configurado"));
+
+    const [supabaseResult, formspreeResult] = await Promise.allSettled([
+      supabaseInsert,
+      formspreeSubmit,
+    ]);
+
+    if (supabaseResult.status === "rejected") {
+      console.error("Error guardando la solicitud de repuesto en Supabase:", supabaseResult.reason);
+    } else if (supabaseResult.value.error) {
+      console.error("Error guardando la solicitud de repuesto en Supabase:", supabaseResult.value.error);
+    }
+    if (formspreeResult.status === "rejected") {
+      console.error("Error enviando la solicitud de repuesto a Formspree:", formspreeResult.reason);
+    }
+
+    const okSupabase = supabaseResult.status === "fulfilled" && !supabaseResult.value.error;
+    const okFormspree = formspreeResult.status === "fulfilled";
+
+    if (okSupabase || okFormspree) {
+      window.location.href = "/gracias";
+      return;
+    }
+
+    errorMsg?.classList.remove("hidden");
+    if (button) button.disabled = false;
+  });
+</script>

@@ -2,13 +2,22 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
-import AboutUs from "../components/AboutUs.astro";
+// AboutUs (Sobre Nosotros) quitado a pedido del cliente el 2026-08-26 --
+// el componente sigue en src/components/AboutUs.astro, pendiente el texto
+// institucional exacto. Recordar reactivarlo cuando el cliente lo envíe.
 import ModelSection from "../components/ModelSection.astro";
+import AbarthSection from "../components/AbarthSection.astro";
+import ServiceAppointment from "../components/ServiceAppointment.astro";
 import StubSection from "../components/StubSection.astro";
 import Contact from "../components/Contact.astro";
 import Footer from "../components/Footer.astro";
 import StickyMobileCta from "../components/StickyMobileCta.astro";
 import { models } from "../data/models";
+
+// Abarth es "sección especial" (tono oscuro + video de fondo), separada del
+// resto de modelos que comparten el ModelSection claro -- ver AbarthSection.astro.
+const regularModels = models.filter((m) => m.slug !== "abarth");
+const abarthModel = models.find((m) => m.slug === "abarth")!;
 ---
 
 <BaseLayout
@@ -18,11 +27,11 @@ import { models } from "../data/models";
   <Header />
   <main>
     <Hero />
-    <AboutUs />
 
     <div id="modelos">
-      {models.map((model) => <ModelSection model={model} />)}
+      {regularModels.map((model) => <ModelSection model={model} />)}
     </div>
+    <AbarthSection model={abarthModel} />
 
     <StubSection
       id="resenas"
@@ -36,11 +45,7 @@ import { models } from "../data/models";
       note="Sección en construcción: formulario de cotización en 2 pasos + tarjetas de financiamiento (pendiente datos de financiamiento del cliente)."
     />
 
-    <StubSection
-      id="servicio"
-      title="Agenda tu Servicio"
-      note="Sección en construcción: por confirmar con el cliente el alcance (agenda de citas de taller, como en el sitio de Kaiyi, u otro formato)."
-    />
+    <ServiceAppointment />
 
     <StubSection
       id="faq"

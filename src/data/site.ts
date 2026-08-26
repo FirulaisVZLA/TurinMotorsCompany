@@ -1,9 +1,7 @@
 // Fuente única de verdad para nombre, contacto y redes del sitio.
 // TODO pendientes de datos reales del cliente (no inventar):
 // - correo de contacto
-// - teléfono fijo (además del WhatsApp)
-// - dirección en texto (solo tenemos el link de Google Maps)
-// - horario de atención
+// - horario de atención (bloquea el calendario de "Agenda tu Servicio")
 
 export const siteInfo = {
   businessName: "Turín Motors",
@@ -13,15 +11,24 @@ export const siteInfo = {
   country: "Venezuela",
 
   email: null as string | null, // TODO: falta
-  phone: null as string | null, // TODO: falta (teléfono fijo, si existe)
+
+  // El cliente confirmó que el WhatsApp ES el teléfono de contacto (no hay
+  // teléfono fijo aparte) -- se usa un solo campo para ambos.
   whatsapp: "+58 424-9402160",
   whatsappLink: "https://wa.me/584249402160",
 
-  addressText: null as string | null, // TODO: falta dirección en texto
-  mapsUrl:
-    "https://www.google.com/maps/place/Tur%C3%ADn+Motors/@9.7337915,-63.1861699,17z/data=!4m6!3m5!1s0x8c3347001cee60cd:0x57bb9c2a4993db58!8m2!3d9.7337862!4d-63.183595!16s%2Fg%2F11x2vq0dlg",
+  addressText: "Av. Juncal Sur, Maturín 6201, Monagas, Venezuela",
+  mapsUrl: "https://maps.app.goo.gl/chBLPev1Yj5qwdbAA?g_st=ic",
 
-  openingHours: null as { days: string; hours: string }[] | null, // TODO: falta horario
+  // TODO: falta horario de atención (días + horas de mañana/tarde). Bloquea
+  // el calendario de citas de "Agenda tu Servicio" -- sin esto no se pueden
+  // generar los cupos disponibles, no se debe inventar un horario de relleno.
+  openingHours: null as {
+    label: string;
+    days: string[]; // nombres en inglés de Date.getDay(), ej. "Monday"
+    morning: { opens: string; closes: string };
+    afternoon: { opens: string; closes: string };
+  } | null,
 
   social: {
     instagram: "https://www.instagram.com/fiatturinmotors",

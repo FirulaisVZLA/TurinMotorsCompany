@@ -1,19 +1,30 @@
 ---
 import { siteInfo } from "../data/site";
 
-const mapEmbedSrc = siteInfo.addressText
-  ? `https://maps.google.com/maps?q=${encodeURIComponent(siteInfo.addressText)}&output=embed`
-  : null;
+// El iframe embebido usa búsqueda por texto de dirección (sin API key);
+// el link corto de Google Maps que dio el cliente (siteInfo.mapsUrl) no
+// sirve como src de iframe -- se usa aparte como botón "Abrir en Maps".
+const mapEmbedSrc = `https://maps.google.com/maps?q=${encodeURIComponent(siteInfo.addressText)}&output=embed`;
+
+const dayNames: Record<string, string> = {
+  Monday: "Lunes",
+  Tuesday: "Martes",
+  Wednesday: "Miércoles",
+  Thursday: "Jueves",
+  Friday: "Viernes",
+  Saturday: "Sábado",
+  Sunday: "Domingo",
+};
 ---
 
-<section id="contacto" class="scroll-mt-20 py-16 px-4 sm:px-6 lg:px-8 bg-neutral-50 border-t border-neutral-200">
+<section id="contacto" class="scroll-mt-20 py-16 px-4 sm:px-6 lg:px-8 border-t border-neutral-200">
   <div class="mx-auto max-w-5xl">
     <h2 class="text-2xl sm:text-3xl font-bold text-ink mb-8 text-center">Contacto</h2>
 
     <div class="grid sm:grid-cols-2 gap-8">
       <div class="space-y-4 text-ink-soft">
         <p>
-          <strong class="text-ink">WhatsApp:</strong>
+          <strong class="text-ink">WhatsApp / Teléfono:</strong>
           {" "}
           <a href={siteInfo.whatsappLink} target="_blank" rel="noopener" class="text-accent hover:text-accent-dark">
             {siteInfo.whatsapp}
@@ -24,24 +35,17 @@ const mapEmbedSrc = siteInfo.addressText
           {siteInfo.email ?? <span class="italic">pendiente</span>}
         </p>
         <p>
-          <strong class="text-ink">Teléfono:</strong>{" "}
-          {siteInfo.phone ?? <span class="italic">pendiente (solo tenemos WhatsApp por ahora)</span>}
-        </p>
-        <p>
           <strong class="text-ink">Dirección:</strong>{" "}
-          {siteInfo.addressText ?? (
-            <>
-              <span class="italic">pendiente en texto —</span>{" "}
-              <a href={siteInfo.mapsUrl} target="_blank" rel="noopener" class="text-accent hover:text-accent-dark">
-                ver ubicación en Google Maps
-              </a>
-            </>
-          )}
+          {siteInfo.addressText}
+          {" — "}
+          <a href={siteInfo.mapsUrl} target="_blank" rel="noopener" class="text-accent hover:text-accent-dark">
+            abrir en Google Maps
+          </a>
         </p>
         <p>
           <strong class="text-ink">Horario:</strong>{" "}
           {siteInfo.openingHours ? (
-            siteInfo.openingHours.map((h) => `${h.days}: ${h.hours}`).join(" · ")
+            `${siteInfo.openingHours.days.map((d) => dayNames[d] ?? d).join(", ")}: ${siteInfo.openingHours.morning.opens}–${siteInfo.openingHours.morning.closes} y ${siteInfo.openingHours.afternoon.opens}–${siteInfo.openingHours.afternoon.closes}`
           ) : (
             <span class="italic">pendiente</span>
           )}
@@ -53,18 +57,7 @@ const mapEmbedSrc = siteInfo.addressText
       </div>
 
       <div class="rounded-xl overflow-hidden border border-neutral-200 min-h-64">
-        {mapEmbedSrc ? (
-          <iframe src={mapEmbedSrc} class="w-full h-full min-h-64" loading="lazy" title="Ubicación de Turín Motors"></iframe>
-        ) : (
-          <a
-            href={siteInfo.mapsUrl}
-            target="_blank"
-            rel="noopener"
-            class="flex h-full min-h-64 items-center justify-center bg-white text-accent font-medium p-6 text-center"
-          >
-            Ver ubicación de Turín Motors en Google Maps →
-          </a>
-        )}
+        <iframe src={mapEmbedSrc} class="w-full h-full min-h-64" loading="lazy" title="Ubicación de Turín Motors"></iframe>
       </div>
     </div>
   </div>
