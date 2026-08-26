@@ -78,6 +78,31 @@ body {
   --stripe-angle: 45deg;
 }
 
+/*
+ * Transición Toro -> Abarth (AbarthTransition.astro). La primera versión
+ * era un degradado de 2 puntos muy corto (256-320px): se sentía como un
+ * lavado gris plano, no como algo fluido. Esta usa muchos más puntos de
+ * color -- primero deja ver bien las franjas por más tiempo, de a poco
+ * mezcla un poco de cada color de FIAT (como si las franjas se fueran
+ * apagando), y solo al final cierra en el negro sólido de Abarth -- y
+ * ocupa mucho más alto de scroll, para que el cambio se note gradual en
+ * vez de un bloque corto.
+ */
+.abarth-fade {
+  height: 48rem;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 12%,
+    color-mix(in srgb, var(--color-accent) 10%, transparent) 28%,
+    color-mix(in srgb, var(--color-accent-cyan) 8%, transparent) 40%,
+    color-mix(in srgb, var(--color-abarth-bg) 35%, transparent) 58%,
+    color-mix(in srgb, var(--color-abarth-bg) 70%, transparent) 78%,
+    color-mix(in srgb, var(--color-abarth-bg) 92%, transparent) 92%,
+    var(--color-abarth-bg) 100%
+  );
+}
+
 @media (max-width: 63.99rem) {
   body {
     padding-bottom: 4.5rem;

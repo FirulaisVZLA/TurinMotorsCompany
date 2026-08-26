@@ -31,7 +31,7 @@ const abarthModel = models.find((m) => m.slug === "abarth")!;
     <Hero />
 
     <div id="modelos">
-      {regularModels.map((model) => <ModelSection model={model} />)}
+      {regularModels.map((model, i) => <ModelSection model={model} reverse={i % 2 === 1} />)}
     </div>
     <AbarthTransition />
     <AbarthSection model={abarthModel} />

@@ -1,8 +1,10 @@
 ---
 // Zona de transición entre el fondo claro (franjas diagonales) y el fondo
-// oscuro de la sección Abarth -- antes el cambio era un corte seco justo
-// en el borde de #abarth; esto lo vuelve un degradado suave que se nota
-// mientras se hace scroll a través de esta franja, en vez de un salto.
+// oscuro de la sección Abarth. Ver .abarth-fade en global.css: degradado
+// de muchos puntos (no solo 2) que se toma ~48rem de scroll, mezclando de
+// a poco los colores de FIAT antes de cerrar en negro -- pedido del
+// cliente el 2026-08-26 porque la primera versión (corta, 2 tonos) se
+// sentía como un lavado gris plano en vez de algo fluido.
 ---
 
-<div aria-hidden="true" class="h-64 sm:h-80 bg-gradient-to-b from-transparent to-abarth-bg"></div>
+<div aria-hidden="true" class="abarth-fade"></div>
