@@ -7,9 +7,13 @@ import { models } from "../data/models";
 const formspreeId = import.meta.env.PUBLIC_FORMSPREE_QUOTE_ID ?? "";
 const endpoint = formspreeId ? `https://formspree.io/f/${formspreeId}` : "";
 
-// Sin selector de color por ahora -- todavía no hay carta de colores por
-// modelo (ver TODO en src/data/models.ts). Se agrega cuando el cliente la envíe.
-const modelOptions = models.map((m) => m.name);
+// Colores por modelo (solo 4 de 8 modelos los tienen todavía, ver TODO en
+// src/data/models.ts) -- el selector de color se llena dinámicamente según
+// el modelo elegido, igual que en el sitio de Kaiyi.
+const modelOptions = models.map((m) => ({
+  name: m.name,
+  colors: (m.colores ?? []).map((c) => c.name),
+}));
 ---
 
 <div class="rounded-2xl bg-white p-5 shadow-lg sm:p-8 border border-neutral-200">
@@ -47,7 +51,14 @@ const modelOptions = models.map((m) => m.name);
         <select id="qf-model" name="modelo" required
           class="w-full rounded-lg border border-neutral-300 bg-white px-4 py-2.5 text-sm focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/20">
           <option value="" disabled selected>Selecciona un modelo</option>
-          {modelOptions.map((name) => <option value={name}>FIAT {name}</option>)}
+          {modelOptions.map((option) => <option value={option.name}>FIAT {option.name}</option>)}
+        </select>
+      </div>
+      <div>
+        <label for="qf-color" class="mb-1 block text-sm font-medium text-ink">Color del vehículo</label>
+        <select id="qf-color" name="color" disabled
+          class="w-full rounded-lg border border-neutral-300 bg-white px-4 py-2.5 text-sm focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/20 disabled:bg-neutral-100 disabled:text-neutral-400">
+          <option value="" selected>Primero elige un modelo</option>
         </select>
       </div>
     </div>
@@ -69,8 +80,34 @@ const modelOptions = models.map((m) => m.name);
   </form>
 </div>
 
+<script type="application/json" id="qf-model-colors" set:html={JSON.stringify(modelOptions)} />
+
 <script>
   import { supabase } from "../lib/supabase";
+
+  interface ModelOption { name: string; colors: string[] }
+
+  const modelSel = document.getElementById("qf-model") as HTMLSelectElement | null;
+  const colorSel = document.getElementById("qf-color") as HTMLSelectElement | null;
+  const dataEl = document.getElementById("qf-model-colors");
+
+  if (modelSel && colorSel && dataEl) {
+    const options = JSON.parse(dataEl.textContent ?? "[]") as ModelOption[];
+
+    modelSel.addEventListener("change", () => {
+      const option = options.find((o) => o.name === modelSel.value);
+      colorSel.innerHTML = "";
+      if (!option || option.colors.length === 0) {
+        colorSel.disabled = true;
+        colorSel.append(new Option("Sin colores disponibles todavía", "", true, true));
+        return;
+      }
+      colorSel.disabled = false;
+      colorSel.append(new Option("Selecciona un color", "", true, true));
+      colorSel.options[0].disabled = true;
+      option.colors.forEach((name) => colorSel.append(new Option(name, name)));
+    });
+  }
 
   const form = document.getElementById("quote-form") as HTMLFormElement | null;
   const errorMsg = document.getElementById("quote-error");
@@ -94,6 +131,7 @@ const modelOptions = models.map((m) => m.name);
       correo: formData.get("email"),
       telefono: formData.get("telefono"),
       modelo: formData.get("modelo"),
+      color: formData.get("color") || null,
       mensaje: formData.get("mensaje") || null,
     });
 

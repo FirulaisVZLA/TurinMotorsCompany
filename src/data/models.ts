@@ -12,14 +12,29 @@
 // - texto de seguridad de Abarth, Fiorino, Pulse y Toro (sin ficha tecnica
 //   PDF todavia no se puede extraer; garantia SI aplica a los 8, el cliente
 //   confirmo "36 meses o 100.000 km, lo que ocurra primero" para todos)
-// - carta de colores (nombre + hex + foto) por modelo -- las fichas tecnicas
-//   de Mobi/Argo/Cronos/Fastback SI traen nombres de colores (sin hex ni
-//   foto individual), ver nota en el commit de este bloque
+// - carta de colores de Abarth, Fiorino, Pulse y Toro (sin ficha tecnica no
+//   hay ni nombres de colores para esos 4)
+// - foto real de cada color (los que SI tienen nombre+hex de abajo solo
+//   traen el swatch de color, no una foto del carro en ese color -- image
+//   queda null hasta que el cliente la mande)
 // - fichas tecnicas PDF de Abarth, Fiorino, Pulse y Toro (faltan)
+//
+// Los hex de colores.ts son APROXIMACIONES VISUALES a partir del nombre
+// oficial de Fiat (leido de las fichas tecnicas), no el codigo de fabrica
+// exacto -- el cliente pidio explicitamente esta aproximacion el
+// 2026-08-26 mientras consigue la carta de colores oficial. Cada color
+// lleva approximate:true y el sitio lo marca visible como "(aproximado)".
 
 export interface GalleryImage {
   src: string;
   alt: string;
+}
+
+export interface ColorOption {
+  name: string;
+  hex: string;
+  image: string | null;
+  approximate?: boolean;
 }
 
 export interface ModelData {
@@ -29,8 +44,24 @@ export interface ModelData {
   fichaTecnicaPdf: string | null;
   seguridad: string[] | null;
   garantia: string | null;
-  colores: { name: string; hex: string; image: string | null }[] | null;
+  colores: ColorOption[] | null;
   videos?: { src: string; description: string }[];
+}
+
+// Hex aproximados por nombre de color Fiat (compartidos entre modelos que
+// repiten el mismo nombre, ej. "Negro Vulcano" aparece en varias fichas).
+const FIAT_COLOR_HEX: Record<string, string> = {
+  "Blanco Banchisa": "#F1F1EE",
+  "Blanco Alaska": "#F4F4F2",
+  "Negro Vulcano": "#161616",
+  "Rojo Montecarlo": "#B10E1E",
+  "Gris Silverstone": "#8A8D8F",
+  "Plata Bari": "#C7C9CB",
+  "Gris Strato": "#A9ACAE",
+};
+
+function color(name: string): ColorOption {
+  return { name, hex: FIAT_COLOR_HEX[name], image: null, approximate: true };
 }
 
 export const models: ModelData[] = [
@@ -64,7 +95,7 @@ export const models: ModelData[] = [
       "Cierre centralizado de puertas a 20 Km/h",
     ],
     garantia: "36 meses o 100.000 km, lo que ocurra primero.",
-    colores: null,
+    colores: [color("Blanco Banchisa"), color("Negro Vulcano"), color("Rojo Montecarlo"), color("Gris Silverstone")],
   },
   {
     slug: "argo-trekking",
@@ -98,7 +129,7 @@ export const models: ModelData[] = [
       "Cámara de estacionamiento trasera",
     ],
     garantia: "36 meses o 100.000 km, lo que ocurra primero.",
-    colores: null,
+    colores: [color("Blanco Banchisa"), color("Negro Vulcano"), color("Rojo Montecarlo"), color("Gris Silverstone")],
   },
   {
     slug: "cronos",
@@ -124,7 +155,7 @@ export const models: ModelData[] = [
       "Cierre centralizado de puertas a 20 Km/h",
     ],
     garantia: "36 meses o 100.000 km, lo que ocurra primero.",
-    colores: null,
+    colores: [color("Blanco Alaska"), color("Negro Vulcano"), color("Gris Silverstone"), color("Plata Bari")],
   },
   {
     slug: "fiorino",
@@ -192,7 +223,13 @@ export const models: ModelData[] = [
       "Frenado autónomo de emergencia",
     ],
     garantia: "36 meses o 100.000 km, lo que ocurra primero.",
-    colores: null,
+    colores: [
+      color("Blanco Banchisa"),
+      color("Negro Vulcano"),
+      color("Gris Strato"),
+      color("Gris Silverstone"),
+      color("Plata Bari"),
+    ],
   },
   {
     slug: "toro",
