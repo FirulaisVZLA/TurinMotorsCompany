@@ -3,8 +3,8 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 
-// TODO: actualizar a la URL real una vez definido el dominio/subdominio en Vercel.
-const SITE_URL = 'https://turinmotors.vercel.app';
+// TODO: actualizar si el cliente compra un dominio propio (ej. turinmotors.com).
+const SITE_URL = 'https://turin-motors-maturin-firulaisvzlas-projects.vercel.app';
 
 // https://astro.build/config
 export default defineConfig({

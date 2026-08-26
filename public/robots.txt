@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://turinmotors.vercel.app/sitemap-index.xml
+Sitemap: https://turin-motors-maturin-firulaisvzlas-projects.vercel.app/sitemap-index.xml
