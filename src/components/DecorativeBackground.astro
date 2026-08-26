@@ -1,14 +1,14 @@
 ---
 // Capa decorativa de líneas diagonales detrás del contenido (ver
-// global.css .diagonal-stripe). Se renderiza 100% en el servidor: 40
-// franjas de 30rem apiladas en flujo normal dentro de un contenedor
-// position:absolute, así cubre cualquier alto de página real (~50rem de
-// sobra para el catálogo completo) sin medir el alto por JS. Se detiene
-// automáticamente en #abarth, que tiene su propio fondo oscuro.
+// global.css .diagonal-stripe). `inset-0` la estira exactamente al alto
+// real del contenido (su hermano <slot/> dentro del mismo wrapper
+// position:relative en BaseLayout.astro), y `overflow-hidden` recorta las
+// franjas de sobra -- así nunca agrega scroll extra al final de la página,
+// sin importar cuánto mida cada página del sitio.
 const BAND_COUNT = 45;
 ---
 
-<div aria-hidden="true" class="absolute inset-x-0 top-0 -z-10 overflow-hidden">
+<div aria-hidden="true" class="absolute inset-0 -z-10 overflow-hidden">
   {Array.from({ length: BAND_COUNT }).map((_, i) => (
     <div class:list={["diagonal-stripe", i % 2 === 1 && "diagonal-stripe--b"]} />
   ))}

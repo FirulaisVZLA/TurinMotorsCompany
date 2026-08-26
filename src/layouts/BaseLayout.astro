@@ -78,8 +78,10 @@ const ogImage = new URL("/images/logo-fiat.png", Astro.site);
     })} />
   </head>
   <body class="font-sans">
-    <DecorativeBackground />
-    <slot />
+    <div class="relative">
+      <DecorativeBackground />
+      <slot />
+    </div>
     <Analytics />
     <SpeedInsights />
   </body>
