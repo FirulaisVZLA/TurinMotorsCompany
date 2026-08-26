@@ -9,8 +9,12 @@
 // especial con transicion de color, ver AbarthSection/ModelSection).
 //
 // TODO pendientes de datos reales del cliente (no inventar):
-// - texto de seguridad y garantia por modelo
-// - carta de colores (nombre + hex + foto) por modelo
+// - texto de seguridad de Abarth, Fiorino, Pulse y Toro (sin ficha tecnica
+//   PDF todavia no se puede extraer; garantia SI aplica a los 8, el cliente
+//   confirmo "36 meses o 100.000 km, lo que ocurra primero" para todos)
+// - carta de colores (nombre + hex + foto) por modelo -- las fichas tecnicas
+//   de Mobi/Argo/Cronos/Fastback SI traen nombres de colores (sin hex ni
+//   foto individual), ver nota en el commit de este bloque
 // - fichas tecnicas PDF de Abarth, Fiorino, Pulse y Toro (faltan)
 
 export interface GalleryImage {
@@ -47,8 +51,19 @@ export const models: ModelData[] = [
       { src: "/images/mobi/interior/mobi-interior-01.jpg", alt: "FIAT Mobi: Palanca de cambios" },
     ],
     fichaTecnicaPdf: "/docs/ficha_tecnica_mobi.pdf",
-    seguridad: null,
-    garantia: null,
+    seguridad: [
+      "2 Airbags (frontales conductor y pasajero)",
+      "Alarma de seguridad con control remoto",
+      "Control electrónico de estabilidad (ESC) y de tracción (TC)",
+      "Sistema de frenos ABS + EBD",
+      "Sistema de asistencia al arranque en pendiente (HLA)",
+      "Sistema de Monitoreo de Presión de Neumáticos (TPMS)",
+      "Sistema de sujeción de sillas para niños (ISOFIX)",
+      "Cinturones de seguridad delanteros reg. en altura",
+      "Cinturones de seguridad posteriores de 3 puntos",
+      "Cierre centralizado de puertas a 20 Km/h",
+    ],
+    garantia: "36 meses o 100.000 km, lo que ocurra primero.",
     colores: null,
   },
   {
@@ -65,8 +80,24 @@ export const models: ModelData[] = [
       { src: "/images/argo-trekking/interior/argo-trekking-interior-02.jpeg", alt: "FIAT Argo Trekking: Palanca de cambios automática" },
     ],
     fichaTecnicaPdf: "/docs/ficha_tecnica_argo.pdf",
-    seguridad: null,
-    garantia: null,
+    // Ficha tecnica tiene columnas "MT/CVT" (Trekking) y "Endurance" -- se usa
+    // la columna MT/CVT (menciona "edicion Trekking" en Diseno), la Endurance
+    // se descarta a pedido del cliente.
+    seguridad: [
+      "2 Airbags (frontales conductor y pasajero)",
+      "Alarma de seguridad con control remoto",
+      "Control electrónico de estabilidad (ESC) de tracción (TC)",
+      "Sistema de frenos ABS + EBD",
+      "Control de tracción avanzado + ABS off road",
+      "Sistema de asistencia al arranque en pendiente (HLA)",
+      "Sistema de Monitoreo de Presión de Neumáticos (TPMS)",
+      "Sistema de sujeción de sillas para niños (ISOFIX)",
+      "Cinturones de seguridad delanteros reg. en altura",
+      "Cinturones de seguridad posteriores de 3 puntos",
+      "Cierre centralizado de puertas a 20 Km/h",
+      "Cámara de estacionamiento trasera",
+    ],
+    garantia: "36 meses o 100.000 km, lo que ocurra primero.",
     colores: null,
   },
   {
@@ -82,8 +113,17 @@ export const models: ModelData[] = [
       { src: "/images/cronos/interior/cronos-interior-05.jpg", alt: "FIAT Cronos: Detalle del motor" },
     ],
     fichaTecnicaPdf: "/docs/ficha_tecnica_cronos.pdf",
-    seguridad: null,
-    garantia: null,
+    seguridad: [
+      "2 Airbags (frontales conductor y pasajero)",
+      "Alarma Perimetral",
+      "Apoyacabezas regulables en altura (5)",
+      "Control electrónico de tracción (TC) y estabilidad (ESC)",
+      "Sistema de sujeción de sillas para niños (ISOFIX)",
+      "Cinturones de seguridad delanteros reg. en altura",
+      "Cinturones de seguridad posteriores de 3 puntos",
+      "Cierre centralizado de puertas a 20 Km/h",
+    ],
+    garantia: "36 meses o 100.000 km, lo que ocurra primero.",
     colores: null,
   },
   {
@@ -103,7 +143,7 @@ export const models: ModelData[] = [
     ],
     fichaTecnicaPdf: null,
     seguridad: null,
-    garantia: null,
+    garantia: "36 meses o 100.000 km, lo que ocurra primero.",
     colores: null,
   },
   {
@@ -117,7 +157,7 @@ export const models: ModelData[] = [
     ],
     fichaTecnicaPdf: null,
     seguridad: null,
-    garantia: null,
+    garantia: "36 meses o 100.000 km, lo que ocurra primero.",
     colores: null,
   },
   {
@@ -136,8 +176,22 @@ export const models: ModelData[] = [
       { src: "/images/fastback/interior/fastback-interior-02.jpg", alt: "FIAT Fastback: Asientos traseros" },
     ],
     fichaTecnicaPdf: "/docs/ficha_tecnica_fastback.pdf",
-    seguridad: null,
-    garantia: null,
+    seguridad: [
+      "2 Airbags (frontales conductor y pasajero)",
+      "2 Airbags laterales (protección tórax y cabeza)",
+      "Alarma",
+      "Control electrónico de estabilidad (ESC) de tracción (TC)",
+      "Sistema de frenos ABS + EBD",
+      "Control de tracción avanzado + ABS off road",
+      "Sistema de asistencia al arranque en pendiente (HLA)",
+      "Sistema de Monitoreo de Presión de Neumáticos (TPMS)",
+      "Sistema de sujeción de sillas para niños (ISOFIX)",
+      "Cinturones de seguridad delanteros reg. en altura",
+      "Cinturones de seguridad posteriores de 3 puntos",
+      "Sistema de mantenimiento de cambio de carril activo",
+      "Frenado autónomo de emergencia",
+    ],
+    garantia: "36 meses o 100.000 km, lo que ocurra primero.",
     colores: null,
   },
   {
@@ -163,7 +217,7 @@ export const models: ModelData[] = [
     ],
     fichaTecnicaPdf: null,
     seguridad: null,
-    garantia: null,
+    garantia: "36 meses o 100.000 km, lo que ocurra primero.",
     colores: null,
   },
   {
@@ -187,7 +241,7 @@ export const models: ModelData[] = [
     ],
     fichaTecnicaPdf: null,
     seguridad: null,
-    garantia: null,
+    garantia: "36 meses o 100.000 km, lo que ocurra primero.",
     colores: null,
     videos: [
       { src: "/videos/abarth-alerta-de-saida-de-faixa.mp4", description: "TODO: descripcion en espanol de esta caracteristica de seguridad (video de referencia en portugues)." },

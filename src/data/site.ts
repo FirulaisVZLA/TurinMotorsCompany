@@ -1,6 +1,4 @@
 // Fuente única de verdad para nombre, contacto y redes del sitio.
-// TODO pendientes de datos reales del cliente (no inventar):
-// - horario de atención (bloquea el calendario de "Agenda tu Servicio")
 
 export const siteInfo = {
   businessName: "Turín Motors",
@@ -25,15 +23,14 @@ export const siteInfo = {
   mapsLat: 9.7337862,
   mapsLng: -63.183595,
 
-  // TODO: falta horario de atención (días + horas de mañana/tarde). Bloquea
-  // el calendario de citas de "Agenda tu Servicio" -- sin esto no se pueden
-  // generar los cupos disponibles, no se debe inventar un horario de relleno.
-  openingHours: null as {
-    label: string;
-    days: string[]; // nombres en inglés de Date.getDay(), ej. "Monday"
-    morning: { opens: string; closes: string };
-    afternoon: { opens: string; closes: string };
-  } | null,
+  // Mismo horario que Turín Motors confirmó usar (igual al de Kaiyi):
+  // lunes a viernes, jornada partida.
+  openingHours: {
+    label: "Lunes a viernes de 8:00am a 12:00pm y de 2:00pm a 5:00pm",
+    days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    morning: { opens: "08:00", closes: "12:00" },
+    afternoon: { opens: "14:00", closes: "17:00" },
+  },
 
   social: {
     instagram: "https://www.instagram.com/fiatturinmotors",
