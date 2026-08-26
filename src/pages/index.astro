@@ -8,6 +8,7 @@ import Hero from "../components/Hero.astro";
 import ModelSection from "../components/ModelSection.astro";
 import AbarthSection from "../components/AbarthSection.astro";
 import ServiceAppointment from "../components/ServiceAppointment.astro";
+import Quote from "../components/Quote.astro";
 import StubSection from "../components/StubSection.astro";
 import Contact from "../components/Contact.astro";
 import Footer from "../components/Footer.astro";
@@ -39,11 +40,7 @@ const abarthModel = models.find((m) => m.slug === "abarth")!;
       note="Sección en construcción: testimonios y formulario de reseñas (pendiente conectar Supabase)."
     />
 
-    <StubSection
-      id="cotizacion"
-      title="Cotización"
-      note="Sección en construcción: formulario de cotización en 2 pasos + tarjetas de financiamiento (pendiente datos de financiamiento del cliente)."
-    />
+    <Quote />
 
     <ServiceAppointment />
 

@@ -1,0 +1,69 @@
+---
+import { directFinancing, kompii } from "../data/financing";
+---
+
+<div class="grid gap-6 sm:grid-cols-2">
+  <div class="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
+    <h4 class="text-lg font-bold text-ink">{directFinancing.name}</h4>
+    <p class="mt-1 text-sm text-ink-soft">{directFinancing.description}</p>
+
+    <details class="group mt-4 rounded-lg border border-neutral-200">
+      <summary class="flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm font-medium text-ink">
+        Recaudos: persona natural
+        <span class="text-ink-soft transition-transform group-open:rotate-45">+</span>
+      </summary>
+      <div class="border-t border-neutral-200 px-4 py-3 text-sm text-ink-soft">
+        {directFinancing.requirementsByPersonType.natural ? (
+          <ul class="list-disc pl-5 space-y-1">
+            {directFinancing.requirementsByPersonType.natural.map((r) => <li>{r.label}</li>)}
+          </ul>
+        ) : (
+          <p class="italic">Pendiente: el cliente mencionó fotos con esta lista que aún no llegaron.</p>
+        )}
+      </div>
+    </details>
+
+    <details class="group mt-2 rounded-lg border border-neutral-200">
+      <summary class="flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm font-medium text-ink">
+        Recaudos: persona jurídica
+        <span class="text-ink-soft transition-transform group-open:rotate-45">+</span>
+      </summary>
+      <div class="border-t border-neutral-200 px-4 py-3 text-sm text-ink-soft">
+        {directFinancing.requirementsByPersonType.juridica ? (
+          <ul class="list-disc pl-5 space-y-1">
+            {directFinancing.requirementsByPersonType.juridica.map((r) => <li>{r.label}</li>)}
+          </ul>
+        ) : (
+          <p class="italic">Pendiente: el cliente mencionó fotos con esta lista que aún no llegaron.</p>
+        )}
+      </div>
+    </details>
+  </div>
+
+  <div class="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
+    <h4 class="text-lg font-bold text-ink">{kompii.name}</h4>
+    <p class="mt-1 text-sm text-ink-soft">{kompii.downPayment}</p>
+    <p class="text-sm text-ink-soft">{kompii.installments}</p>
+
+    <a
+      href={kompii.applicationUrl}
+      target="_blank"
+      rel="noopener"
+      class="mt-4 inline-flex items-center justify-center rounded-full bg-accent px-6 py-2.5 text-sm font-medium text-white hover:bg-accent-dark transition-colors"
+    >
+      Solicitar con Kompii
+    </a>
+
+    <details class="group mt-4 rounded-lg border border-neutral-200">
+      <summary class="flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm font-medium text-ink">
+        Recaudos necesarios
+        <span class="text-ink-soft transition-transform group-open:rotate-45">+</span>
+      </summary>
+      <div class="border-t border-neutral-200 px-4 py-3 text-sm text-ink-soft">
+        <ul class="list-disc pl-5 space-y-1">
+          {kompii.requirements.map((r) => <li>{r}</li>)}
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>

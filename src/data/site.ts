@@ -1,6 +1,5 @@
 // Fuente única de verdad para nombre, contacto y redes del sitio.
 // TODO pendientes de datos reales del cliente (no inventar):
-// - correo de contacto
 // - horario de atención (bloquea el calendario de "Agenda tu Servicio")
 
 export const siteInfo = {
@@ -10,7 +9,7 @@ export const siteInfo = {
   state: "Monagas",
   country: "Venezuela",
 
-  email: null as string | null, // TODO: falta
+  email: "Turinmotorscompanyca@gmail.com",
 
   // El cliente confirmó que el WhatsApp ES el teléfono de contacto (no hay
   // teléfono fijo aparte) -- se usa un solo campo para ambos.
