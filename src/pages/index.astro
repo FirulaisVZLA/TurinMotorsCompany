@@ -6,6 +6,7 @@ import Hero from "../components/Hero.astro";
 // el componente sigue en src/components/AboutUs.astro, pendiente el texto
 // institucional exacto. Recordar reactivarlo cuando el cliente lo envíe.
 import ModelSection from "../components/ModelSection.astro";
+import AbarthTransition from "../components/AbarthTransition.astro";
 import AbarthSection from "../components/AbarthSection.astro";
 import ServiceAppointment from "../components/ServiceAppointment.astro";
 import Quote from "../components/Quote.astro";
@@ -32,6 +33,7 @@ const abarthModel = models.find((m) => m.slug === "abarth")!;
     <div id="modelos">
       {regularModels.map((model) => <ModelSection model={model} />)}
     </div>
+    <AbarthTransition />
     <AbarthSection model={abarthModel} />
 
     <StubSection
