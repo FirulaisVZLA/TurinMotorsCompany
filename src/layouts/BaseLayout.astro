@@ -13,10 +13,13 @@ interface Props {
 
 const { title, description, noindex = false } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
-// TODO: reemplazar por una imagen OG real 1200x630 una vez el cliente
-// confirme el material grafico (ver lección en el sitio de Kaiyi: recortar
-// con sharp anclando al borde que tenga el contenido importante).
-const ogImage = new URL("/images/logo-fiat.png", Astro.site);
+// Imagen para vista previa al compartir el link (og:image/twitter:image):
+// logo de Abarth a pedido del cliente el 2026-08-27, en vez del logo FIAT.
+// TODO: reemplazar por una imagen OG dedicada 1200x630 si el cliente
+// consigue una (ver lección en el sitio de Kaiyi: recortar con sharp
+// anclando al borde que tenga el contenido importante); por ahora es el
+// logo de Abarth tal cual (1920x1080, se recorta un poco en algunas redes).
+const ogImage = new URL("/images/abarth-logo.png", Astro.site);
 ---
 
 <!doctype html>
