@@ -1,4 +1,6 @@
 ---
+import sharp from "sharp";
+import path from "node:path";
 import type { GalleryImage } from "../data/models";
 
 interface Props {
@@ -7,26 +9,40 @@ interface Props {
 }
 
 const { id, images } = Astro.props;
+
+// Alto tope de la foto grande (el ancho se deriva del aspect-ratio real de
+// cada archivo, leido con sharp en tiempo de build -- asi el marco siempre
+// coincide exacto con la foto, sin importar si es panoramica o no, y sin
+// depender de trucos de CSS como w-fit que se rompen en columnas angostas
+// como el layout de 2 columnas alternado de ModelSection).
+const HEIGHT_CAP = "min(60vh, 26rem)";
+
+const slides = await Promise.all(
+  images.map(async (img) => {
+    const filePath = path.join(process.cwd(), "public", img.src);
+    const metadata = await sharp(filePath).metadata();
+    const ratio = metadata.width && metadata.height ? metadata.width / metadata.height : 16 / 9;
+    return { ...img, ratio };
+  })
+);
 ---
 
-{images.length > 0 && (
+{slides.length > 0 && (
   <div class="gallery" data-gallery-id={id}>
-    <div
-      class="gallery-frame relative mx-auto w-fit max-w-full overflow-hidden rounded-xl bg-neutral-100"
-      style="height: min(60vh, 30rem);"
-    >
-      {images.map((img, i) => (
+    <div class="relative">
+      {slides.map((img, i) => (
         <img
           src={img.src}
           alt={img.alt}
-          class="gallery-slide h-full w-auto object-contain"
+          class="gallery-slide mx-auto rounded-xl bg-neutral-100 shadow-sm object-contain"
           class:list={[i === 0 ? "block" : "hidden"]}
+          style={`aspect-ratio: ${img.ratio}; max-height: ${HEIGHT_CAP}; max-width: 100%; width: auto; height: auto;`}
           data-index={i}
           loading={i === 0 ? "eager" : "lazy"}
         />
       ))}
 
-      {images.length > 1 && (
+      {slides.length > 1 && (
         <>
           <button
             type="button"
@@ -50,12 +66,12 @@ const { id, images } = Astro.props;
       )}
     </div>
 
-    {images.length > 1 && (
+    {slides.length > 1 && (
       <div class="mt-3 grid grid-cols-5 sm:grid-cols-7 gap-2">
-        {images.map((img, i) => (
+        {slides.map((img, i) => (
           <button
             type="button"
-            class="gallery-thumb aspect-video overflow-hidden rounded-md border-2 transition-colors"
+            class="gallery-thumb aspect-video overflow-hidden rounded-md border-2 shadow-sm transition-colors"
             class:list={[i === 0 ? "border-accent" : "border-transparent"]}
             data-index={i}
             aria-label={`Ver foto ${i + 1}`}
@@ -71,10 +87,6 @@ const { id, images } = Astro.props;
 <script>
   // Navegación de galería SOLO por clic (flechas y miniaturas) — nunca
   // auto-avance al pasar el mouse, el usuario controla cuánto ve cada foto.
-  // El marco (.gallery-frame) usa w-fit: se ajusta al ancho real de la foto
-  // visible (alto fijo, ancho automático) en vez de forzar una caja 16:9
-  // fija, así no queda espacio en blanco cuando una foto no es exactamente
-  // panorámica.
   function setupGallery(root: HTMLElement) {
     const slides = Array.from(root.querySelectorAll<HTMLImageElement>(".gallery-slide"));
     const thumbs = Array.from(root.querySelectorAll<HTMLButtonElement>(".gallery-thumb"));

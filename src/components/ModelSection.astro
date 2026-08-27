@@ -37,8 +37,8 @@ const { model, reverse = false } = Astro.props;
       </div>
 
       <div class:list={[reverse ? "lg:order-1" : "lg:order-2"]}>
-        <div class="divide-y divide-neutral-200 border-y border-neutral-200">
-          <details class="group py-4">
+        <div class="divide-y divide-neutral-200 rounded-xl border border-neutral-200 bg-white shadow-sm">
+          <details class="group px-5 py-4">
             <summary class="flex cursor-pointer items-center justify-between font-medium text-ink">
               Seguridad
               <span class="text-ink-soft transition-transform group-open:rotate-45">+</span>
@@ -54,7 +54,7 @@ const { model, reverse = false } = Astro.props;
             </div>
           </details>
 
-          <details class="group py-4">
+          <details class="group px-5 py-4">
             <summary class="flex cursor-pointer items-center justify-between font-medium text-ink">
               Garantía
               <span class="text-ink-soft transition-transform group-open:rotate-45">+</span>

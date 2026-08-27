@@ -279,7 +279,10 @@ export const models: ModelData[] = [
     fichaTecnicaPdf: null,
     seguridad: null,
     garantia: "36 meses o 100.000 km, lo que ocurra primero.",
-    colores: null,
+    // El cliente confirmo que Abarth viene en los mismos rojo/negro/blanco
+    // que los demas modelos -- se reusan los mismos nombres+hex (aproximados
+    // igual que el resto) en vez de inventar unos nuevos.
+    colores: [color("Blanco Banchisa"), color("Negro Vulcano"), color("Rojo Montecarlo")],
     videos: [
       { src: "/videos/abarth-alerta-de-saida-de-faixa.mp4", description: "TODO: descripcion en espanol de esta caracteristica de seguridad (video de referencia en portugues)." },
       { src: "/videos/abarth-farol-automatico.mp4", description: "TODO: descripcion en espanol de esta caracteristica de seguridad (video de referencia en portugues)." },
