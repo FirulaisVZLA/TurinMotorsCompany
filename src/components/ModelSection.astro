@@ -27,7 +27,7 @@ const { model, reverse = false } = Astro.props;
             href={model.fichaTecnicaPdf}
             target="_blank"
             rel="noopener"
-            class="mt-6 inline-flex items-center gap-2 rounded-full border border-ink px-5 py-2.5 text-sm font-medium text-ink hover:bg-ink hover:text-white transition-colors"
+            class="mt-6 inline-flex items-center gap-2 rounded-full bg-accent-yellow px-5 py-2.5 text-sm font-medium text-ink shadow-sm hover:brightness-95 transition-[filter]"
           >
             Descargar ficha técnica (PDF)
           </a>
@@ -71,7 +71,7 @@ const { model, reverse = false } = Astro.props;
       </div>
     </div>
 
-    <div class="mt-8">
+    <div class="mt-8 rounded-xl border border-neutral-200 bg-white p-5 shadow-sm">
       <h3 class="text-lg font-semibold text-ink mb-3">Carta de colores</h3>
       {model.colores && model.colores.length > 0 ? (
         <div class="grid sm:grid-cols-2 gap-6">

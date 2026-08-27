@@ -49,7 +49,7 @@ const { model } = Astro.props;
           href={model.fichaTecnicaPdf}
           target="_blank"
           rel="noopener"
-          class="mt-8 inline-flex items-center gap-2 rounded-full border border-abarth-yellow px-5 py-2.5 text-sm font-medium text-abarth-yellow hover:bg-abarth-yellow hover:text-abarth-bg transition-colors"
+          class="mt-8 inline-flex items-center gap-2 rounded-full bg-abarth-yellow px-5 py-2.5 text-sm font-medium text-abarth-bg shadow-sm hover:brightness-95 transition-[filter]"
         >
           Descargar ficha técnica (PDF)
         </a>
@@ -57,8 +57,8 @@ const { model } = Astro.props;
         <p class="mt-8 text-sm text-white/60 italic">Ficha técnica en PDF: pendiente (el cliente no la ha proporcionado todavía).</p>
       )}
 
-      <div class="mt-8 divide-y divide-white/15 border-y border-white/15">
-        <details class="group py-4">
+      <div class="mt-8 divide-y divide-white/15 rounded-xl border border-white/15 bg-white/5">
+        <details class="group px-5 py-4">
           <summary class="flex cursor-pointer items-center justify-between font-medium text-white">
             Seguridad
             <span class="text-white/60 transition-transform group-open:rotate-45">+</span>
@@ -72,7 +72,7 @@ const { model } = Astro.props;
           </div>
         </details>
 
-        <details class="group py-4">
+        <details class="group px-5 py-4">
           <summary class="flex cursor-pointer items-center justify-between font-medium text-white">
             Garantía
             <span class="text-white/60 transition-transform group-open:rotate-45">+</span>
@@ -87,7 +87,7 @@ const { model } = Astro.props;
         </details>
       </div>
 
-      <div class="mt-8">
+      <div class="mt-8 rounded-xl border border-white/15 bg-white/5 p-5">
         <h3 class="text-lg font-semibold text-white mb-3">Carta de colores</h3>
         {model.colores && model.colores.length > 0 ? (
           <div class="grid sm:grid-cols-2 gap-6">
