@@ -12,18 +12,16 @@
 // - texto de seguridad de Abarth, Fiorino, Pulse y Toro (sin ficha tecnica
 //   PDF todavia no se puede extraer; garantia SI aplica a los 8, el cliente
 //   confirmo "36 meses o 100.000 km, lo que ocurra primero" para todos)
-// - carta de colores de Abarth, Fiorino, Pulse y Toro (sin ficha tecnica no
-//   hay ni nombres de colores para esos 4)
-// - foto real de cada color (los que SI tienen nombre+hex de abajo solo
-//   traen el swatch de color, no una foto del carro en ese color -- image
-//   queda null hasta que el cliente la mande)
+// - foto real de cada color (los nombres+hex de abajo son el swatch de
+//   color, no una foto del carro en ese color -- image queda null hasta
+//   que el cliente la mande)
 // - fichas tecnicas PDF de Abarth, Fiorino, Pulse y Toro (faltan)
 //
-// Los hex de colores.ts son APROXIMACIONES VISUALES a partir del nombre
-// oficial de Fiat (leido de las fichas tecnicas), no el codigo de fabrica
-// exacto -- el cliente pidio explicitamente esta aproximacion el
-// 2026-08-26 mientras consigue la carta de colores oficial. Cada color
-// lleva approximate:true y el sitio lo marca visible como "(aproximado)".
+// Los hex de FIAT_COLOR_HEX son aproximaciones visuales a partir del
+// nombre oficial de Fiat -- los de Mobi/Argo/Cronos/Fastback vienen del
+// nombre leido en su ficha tecnica; los de Pulse y Toro los dio el cliente
+// directamente el 2026-08-26 (pidio explicitamente NO marcarlos como
+// aproximados en el sitio, a diferencia de la ronda anterior).
 
 export interface GalleryImage {
   src: string;
@@ -34,7 +32,6 @@ export interface ColorOption {
   name: string;
   hex: string;
   image: string | null;
-  approximate?: boolean;
 }
 
 export interface ModelData {
@@ -48,8 +45,8 @@ export interface ModelData {
   videos?: { src: string; description: string }[];
 }
 
-// Hex aproximados por nombre de color Fiat (compartidos entre modelos que
-// repiten el mismo nombre, ej. "Negro Vulcano" aparece en varias fichas).
+// Hex por nombre de color Fiat (compartidos entre modelos que repiten el
+// mismo nombre, ej. "Negro Vulcano" aparece en varias fichas).
 const FIAT_COLOR_HEX: Record<string, string> = {
   "Blanco Banchisa": "#F1F1EE",
   "Blanco Alaska": "#F4F4F2",
@@ -58,10 +55,18 @@ const FIAT_COLOR_HEX: Record<string, string> = {
   "Gris Silverstone": "#8A8D8F",
   "Plata Bari": "#C7C9CB",
   "Gris Strato": "#A9ACAE",
+  // Dados por el cliente para Toro (2026-08-26), sin ficha tecnica propia:
+  "Blanco Ambiente / Blanco Polar": "#F4F4F2",
+  "Negro Carbón": "#1A1A1C",
+  "Rojo Tribal": "#B8202B",
+  "Gris Billet": "#B7B9BB",
+  "Gris Granite Crystal": "#4A4A4C",
+  "Azul Jazz": "#1B4B8F",
+  "Gris Sting": "#8B8D8E",
 };
 
 function color(name: string): ColorOption {
-  return { name, hex: FIAT_COLOR_HEX[name], image: null, approximate: true };
+  return { name, hex: FIAT_COLOR_HEX[name], image: null };
 }
 
 export const models: ModelData[] = [
@@ -189,7 +194,14 @@ export const models: ModelData[] = [
     fichaTecnicaPdf: null,
     seguridad: null,
     garantia: "36 meses o 100.000 km, lo que ocurra primero.",
-    colores: null,
+    colores: [
+      color("Blanco Banchisa"),
+      color("Rojo Montecarlo"),
+      color("Negro Vulcano"),
+      color("Plata Bari"),
+      color("Gris Silverstone"),
+      color("Gris Strato"),
+    ],
   },
   {
     slug: "fastback",
@@ -255,7 +267,15 @@ export const models: ModelData[] = [
     fichaTecnicaPdf: null,
     seguridad: null,
     garantia: "36 meses o 100.000 km, lo que ocurra primero.",
-    colores: null,
+    colores: [
+      color("Blanco Ambiente / Blanco Polar"),
+      color("Negro Carbón"),
+      color("Rojo Tribal"),
+      color("Gris Billet"),
+      color("Gris Granite Crystal"),
+      color("Azul Jazz"),
+      color("Gris Sting"),
+    ],
   },
   {
     slug: "abarth",
@@ -280,12 +300,18 @@ export const models: ModelData[] = [
     seguridad: null,
     garantia: "36 meses o 100.000 km, lo que ocurra primero.",
     // El cliente confirmo que Abarth viene en los mismos rojo/negro/blanco
-    // que los demas modelos -- se reusan los mismos nombres+hex (aproximados
-    // igual que el resto) en vez de inventar unos nuevos.
+    // que los demas modelos -- se reusan los mismos nombres+hex en vez de
+    // inventar unos nuevos.
     colores: [color("Blanco Banchisa"), color("Negro Vulcano"), color("Rojo Montecarlo")],
     videos: [
-      { src: "/videos/abarth-alerta-de-saida-de-faixa.mp4", description: "TODO: descripcion en espanol de esta caracteristica de seguridad (video de referencia en portugues)." },
-      { src: "/videos/abarth-farol-automatico.mp4", description: "TODO: descripcion en espanol de esta caracteristica de seguridad (video de referencia en portugues)." },
+      {
+        src: "/videos/abarth-alerta-de-saida-de-faixa.mp4",
+        description: "Alerta de salida de carril: detecta si el vehículo se sale del carril sin usar la señal y avisa al conductor para corregir a tiempo.",
+      },
+      {
+        src: "/videos/abarth-farol-automatico.mp4",
+        description: "Faros automáticos: las luces delanteras se encienden y apagan solas según la luz ambiente, sin que el conductor tenga que hacerlo manualmente.",
+      },
     ],
   },
 ];

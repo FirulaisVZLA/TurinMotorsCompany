@@ -81,7 +81,7 @@ const { model, reverse = false } = Astro.props;
               <div class="flex items-center gap-2">
                 <span class="h-4 w-4 rounded-full border border-neutral-300" style={`background:${c.hex}`}></span>
                 <span class="text-sm text-ink">
-                  {c.name} <span class="text-ink-soft">({c.hex}{c.approximate && " aprox."})</span>
+                  {c.name} <span class="text-ink-soft">({c.hex})</span>
                 </span>
               </div>
             </div>
@@ -89,11 +89,6 @@ const { model, reverse = false } = Astro.props;
         </div>
       ) : (
         <p class="text-sm text-ink-soft italic">Pendiente: falta la carta de colores (nombre, código hex y foto) de este modelo.</p>
-      )}
-      {model.colores?.some((c) => c.approximate) && (
-        <p class="mt-3 text-xs text-ink-soft italic">
-          Colores aproximados a partir del nombre oficial de Fiat, pendiente confirmar el código exacto de fábrica.
-        </p>
       )}
     </div>
 
