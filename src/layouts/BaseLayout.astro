@@ -16,12 +16,14 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 // Imagen para vista previa al compartir el link (og:image/twitter:image):
 // logo de Abarth a pedido del cliente. Version 2026-08-28: el cliente mandó
 // un archivo dedicado de mejor calidad ("ABARTH LOGO LINK.png", 1024x687
-// con fondo transparente) para reemplazar la primera versión que se veía
-// borrosa al compartir el link.
-// TODO: reemplazar por una imagen OG 1200x630 sin fondo transparente si el
-// cliente consigue una (ver lección en el sitio de Kaiyi: recortar con
-// sharp anclando al borde que tenga el contenido importante).
-const ogImage = new URL("/images/abarth-logo-link.png", Astro.site);
+// con fondo transparente). El archivo que sirve el servidor SÍ es este
+// (verificado), pero WhatsApp/Facebook/etc. cachean la vista previa por URL
+// exacta y no siempre la refrescan sola -- se le agrega "?v=" con la fecha
+// de la última vez que cambió esta imagen específicamente, para forzar a
+// esas plataformas a tratarla como una imagen nueva y volver a buscarla.
+// Actualizar esta fecha cada vez que se reemplace el archivo de nuevo.
+const OG_IMAGE_VERSION = "20260828";
+const ogImage = new URL(`/images/abarth-logo-link.png?v=${OG_IMAGE_VERSION}`, Astro.site);
 ---
 
 <!doctype html>
