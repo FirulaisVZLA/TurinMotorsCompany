@@ -34,6 +34,20 @@ export interface ColorOption {
   image: string | null;
 }
 
+export interface SpecItem {
+  label: string;
+  value: string;
+}
+
+// Una "version" es una variante/trim del mismo modelo con su propia ficha
+// tecnica (ej. Cronos: Like/Drive Plus/Stile/Precision) -- se muestra como
+// botones clicables sobre una tabla de especificaciones que cambia, sin
+// galeria de fotos propia (las fotos del modelo se quedan fijas).
+export interface ModelVersion {
+  name: string;
+  specs: SpecItem[];
+}
+
 export interface ModelData {
   slug: string;
   name: string;
@@ -42,6 +56,7 @@ export interface ModelData {
   seguridad: string[] | null;
   garantia: string | null;
   colores: ColorOption[] | null;
+  versions?: ModelVersion[];
   videos?: { src: string; description: string }[];
 }
 
@@ -135,6 +150,45 @@ export const models: ModelData[] = [
     ],
     garantia: "36 meses o 100.000 km, lo que ocurra primero.",
     colores: [color("Blanco Banchisa"), color("Negro Vulcano"), color("Rojo Montecarlo"), color("Gris Silverstone")],
+    // Ficha tecnica del cliente (2026-09-03) trae 2 columnas: Trekking y
+    // Endurance -- Endurance no tiene fotos propias todavia (el cliente
+    // pidio ignorarlas en la ronda anterior), pero si sus especificaciones.
+    versions: [
+      {
+        name: "Trekking",
+        specs: [
+          { label: "Carrocería", value: "5 puertas" },
+          { label: "Motor", value: "Firefly 1.3, 4 en línea, 2 válvulas/cilindro, 1.332 cc" },
+          { label: "Potencia máxima", value: "99 CV / 6.000 rpm" },
+          { label: "Par máximo", value: "218 Nm / 4.000 rpm" },
+          { label: "Distribución", value: "Cadena \"for life\"" },
+          { label: "Alimentación", value: "Inyección electrónica multipunto, gasolina" },
+          { label: "Dirección", value: "Asistencia eléctrica, diámetro de giro 10,4 m" },
+          { label: "Transmisión", value: "Delantera, caja manual de 5 velocidades o CVT de 7 velocidades" },
+          { label: "Neumáticos", value: "185/60 R15 ATR" },
+          { label: "Tanque de combustible", value: "48 l" },
+          { label: "Peso en orden de marcha", value: "1.187 kg" },
+          { label: "Capacidad de baúl", value: "300 l" },
+        ],
+      },
+      {
+        name: "Endurance",
+        specs: [
+          { label: "Carrocería", value: "5 puertas" },
+          { label: "Motor", value: "Firefly 1.3, 4 en línea, 2 válvulas/cilindro, 1.332 cc" },
+          { label: "Potencia máxima", value: "99 CV / 6.000 rpm" },
+          { label: "Par máximo", value: "128 Nm / 4.000 rpm" },
+          { label: "Distribución", value: "Cadena \"for life\"" },
+          { label: "Alimentación", value: "Inyección electrónica multipunto, gasolina (hasta 5% etanol)" },
+          { label: "Dirección", value: "Asistencia eléctrica, diámetro de giro 10 m" },
+          { label: "Transmisión", value: "4x2 delantera, caja manual de 5 velocidades" },
+          { label: "Neumáticos", value: "205/60 R15 ATR" },
+          { label: "Tanque de combustible", value: "47 l" },
+          { label: "Peso en orden de marcha", value: "1.131 kg" },
+          { label: "Capacidad de baúl", value: "300 l" },
+        ],
+      },
+    ],
   },
   {
     slug: "cronos",
@@ -161,6 +215,28 @@ export const models: ModelData[] = [
     ],
     garantia: "36 meses o 100.000 km, lo que ocurra primero.",
     colores: [color("Blanco Alaska"), color("Negro Vulcano"), color("Gris Silverstone"), color("Plata Bari")],
+    // Ficha tecnica del cliente (2026-09-03): 4 versiones. Las especificaciones
+    // mecanicas son identicas entre versiones salvo la caja de cambios
+    // (Like/Drive Plus/Stile = manual, Precision = CVT), tal como aparece
+    // en la ficha.
+    versions: (() => {
+      const sharedSpecs: SpecItem[] = [
+        { label: "Motor", value: "4 en línea, 2 válvulas/cilindro, 1.332 cc" },
+        { label: "Potencia máxima", value: "99 CV / 6.000 rpm" },
+        { label: "Par máximo", value: "13,0 kgm / 4.000 rpm" },
+        { label: "Nivel de emisiones", value: "Euro 5" },
+        { label: "Distribución", value: "Cadena \"for life\", árbol de levas 1 a la cabeza" },
+        { label: "Alimentación", value: "Inyección electrónica multipunto, nafta" },
+        { label: "Dirección", value: "Asistencia eléctrica con piñón y cremallera, diámetro de giro 10,4 m" },
+        { label: "Suspensión delantera", value: "Independiente McPherson, brazos oscilantes inferiores, resortes helicoidales y barra estabilizadora" },
+        { label: "Suspensión trasera", value: "Eje de torsión con ruedas semi independientes, amortiguadores y resortes helicoidales" },
+        { label: "Frenos (delantero / trasero)", value: "Discos ventilados / Tambor" },
+      ];
+      return ["Like", "Drive Plus", "Stile", "Precision"].map((name) => ({
+        name,
+        specs: [{ label: "Caja de cambios", value: name === "Precision" ? "CVT" : "Manual" }, ...sharedSpecs],
+      }));
+    })(),
   },
   {
     slug: "fiorino",
@@ -177,7 +253,7 @@ export const models: ModelData[] = [
       { src: "/images/fiorino/interior/fiorino-interior-01.jpg", alt: "FIAT Fiorino: Asientos delanteros" },
       { src: "/images/fiorino/interior/fiorino-interior-02.jpg", alt: "FIAT Fiorino: Detalle de compartimento de puerta" },
     ],
-    fichaTecnicaPdf: null,
+    fichaTecnicaPdf: "/docs/ficha_tecnica_fiorino.pdf",
     seguridad: null,
     garantia: "36 meses o 100.000 km, lo que ocurra primero.",
     colores: null,
@@ -191,7 +267,7 @@ export const models: ModelData[] = [
       { src: "/images/pulse/extra/pulse-extra-02.jpg", alt: "FIAT Pulse: Volante y tablero de instrumentos (vista cercana)" },
       { src: "/images/pulse/extra/pulse-extra-01.jpg", alt: "FIAT Pulse: Vista amplia del tablero, volante y asientos" },
     ],
-    fichaTecnicaPdf: null,
+    fichaTecnicaPdf: "/docs/ficha_tecnica_pulse.pdf",
     seguridad: null,
     garantia: "36 meses o 100.000 km, lo que ocurra primero.",
     colores: [
@@ -202,6 +278,41 @@ export const models: ModelData[] = [
       color("Gris Silverstone"),
       color("Gris Strato"),
     ],
+    // Ficha tecnica del cliente (2026-09-03): 5 versiones, 2 motores
+    // distintos (1.3 Firefly atmosferico en Drive/S-Design, 1.0 T200 turbo
+    // en Audace/Impetus).
+    versions: (() => {
+      const sharedSpecs: SpecItem[] = [
+        { label: "Distribución", value: "Cadena \"for life\"" },
+        { label: "Alimentación", value: "Inyección electrónica multipunto, nafta" },
+        { label: "Dirección", value: "Asistencia eléctrica, diámetro de giro 10,5 m" },
+        { label: "Suspensión delantera", value: "Independiente McPherson, brazos oscilantes transversales, resortes helicoidales y barra estabilizadora" },
+        { label: "Suspensión trasera", value: "Eje de torsión con ruedas semi independientes, resortes helicoidales" },
+        { label: "Frenos (delantero / trasero)", value: "Disco sólido / Tambor" },
+        { label: "Tracción", value: "4x2 delantera" },
+        { label: "Tanque de combustible", value: "47 l" },
+        { label: "Capacidad de baúl", value: "370 l" },
+      ];
+      const atmospheric: SpecItem[] = [
+        { label: "Motor", value: "1.3 Firefly, 4 en línea, 2 válvulas/cilindro, 1.332 cc" },
+        { label: "Potencia máxima", value: "99 CV / 6.000 rpm" },
+        { label: "Par máximo", value: "128 Nm / 4.000 rpm" },
+        { label: "Neumáticos", value: "195/60 R16" },
+      ];
+      const turbo: SpecItem[] = [
+        { label: "Motor", value: "1.0 T200 Turbonafta, 3 en línea, 4 válvulas/cilindro, 999 cc" },
+        { label: "Potencia máxima", value: "120 CV / 5.750 rpm" },
+        { label: "Par máximo", value: "200 Nm / 1.750 rpm" },
+        { label: "Neumáticos", value: "205/50 R17" },
+      ];
+      return [
+        { name: "Drive MT", specs: [...atmospheric, { label: "Caja de cambios", value: "Manual, 5 vel." }, { label: "Peso en orden de marcha", value: "1.140 kg" }, ...sharedSpecs] },
+        { name: "Drive AT", specs: [...atmospheric, { label: "Caja de cambios", value: "CVT, 7 vel." }, { label: "Peso en orden de marcha", value: "1.187 kg" }, ...sharedSpecs] },
+        { name: "S-Design AT", specs: [...atmospheric, { label: "Caja de cambios", value: "CVT, 7 vel." }, { label: "Peso en orden de marcha", value: "1.187 kg" }, ...sharedSpecs] },
+        { name: "Audace Turbo AT", specs: [...turbo, { label: "Caja de cambios", value: "CVT, 7 vel." }, { label: "Peso en orden de marcha", value: "1.234 kg" }, ...sharedSpecs] },
+        { name: "Impetus Turbo AT", specs: [...turbo, { label: "Caja de cambios", value: "CVT, 7 vel." }, { label: "Peso en orden de marcha", value: "1.237 kg" }, ...sharedSpecs] },
+      ];
+    })(),
   },
   {
     slug: "fastback",
@@ -279,30 +390,61 @@ export const models: ModelData[] = [
   },
   {
     slug: "abarth",
-    name: "Abarth",
+    // Renombrado el 2026-09-03: la ficha tecnica que mando el cliente
+    // confirma que estas fotos y esta seccion especial en realidad son del
+    // "Fastback Abarth" (motor 1.3 T270 turbo, trim ABARTH del Fastback),
+    // no un modelo "Abarth" generico -- la matricula "FASTBACK" que salia
+    // en una de las fotos no era un error, era correcta.
+    name: "Fastback Abarth",
     gallery: [
-      { src: "/images/abarth/extra/abarth-extra-01.jpg", alt: "FIAT Abarth: Vista frontal 3/4 en movimiento" },
-      { src: "/images/abarth/exterior/abarth-exterior-01.jpg", alt: "FIAT Abarth: Vista trasera recta" },
-      { src: "/images/abarth/exterior/abarth-exterior-07.jpg", alt: "FIAT Abarth: Vista superior del techo y parabrisas" },
-      { src: "/images/abarth/exterior/abarth-exterior-04.jpg", alt: "FIAT Abarth: Detalle de puerta, espejo y emblema Abarth" },
-      { src: "/images/abarth/exterior/abarth-exterior-02.jpg", alt: "FIAT Abarth: Detalle de faro delantero y parrilla" },
-      { src: "/images/abarth/exterior/abarth-exterior-03.jpg", alt: "FIAT Abarth: Detalle de la parrilla con logo Abarth" },
-      { src: "/images/abarth/exterior/abarth-exterior-06.jpg", alt: "FIAT Abarth: Detalle de la llanta" },
-      { src: "/images/abarth/exterior/abarth-exterior-05.jpg", alt: "FIAT Abarth: Vista del motor bajo el capó" },
-      { src: "/images/abarth/interior/abarth-interior-04.jpg", alt: "FIAT Abarth: Vista amplia del tablero, volante y asientos" },
-      { src: "/images/abarth/interior/abarth-interior-06.jpg", alt: "FIAT Abarth: Detalle del centro del volante con logo Abarth" },
-      { src: "/images/abarth/interior/abarth-interior-03.jpg", alt: "FIAT Abarth: Tablero de instrumentos digital" },
-      { src: "/images/abarth/interior/abarth-interior-01.jpg", alt: "FIAT Abarth: Asientos delanteros con logo Abarth" },
-      { src: "/images/abarth/interior/abarth-interior-02.jpg", alt: "FIAT Abarth: Cargador inalámbrico y palanca de cambios" },
-      { src: "/images/abarth/interior/abarth-interior-05.jpg", alt: "FIAT Abarth: Detalle del panel de puerta y controles de vidrios" },
+      { src: "/images/abarth/extra/abarth-extra-01.jpg", alt: "FIAT Fastback Abarth: Vista frontal 3/4 en movimiento" },
+      { src: "/images/abarth/exterior/abarth-exterior-01.jpg", alt: "FIAT Fastback Abarth: Vista trasera recta" },
+      { src: "/images/abarth/exterior/abarth-exterior-07.jpg", alt: "FIAT Fastback Abarth: Vista superior del techo y parabrisas" },
+      { src: "/images/abarth/exterior/abarth-exterior-04.jpg", alt: "FIAT Fastback Abarth: Detalle de puerta, espejo y emblema Abarth" },
+      { src: "/images/abarth/exterior/abarth-exterior-02.jpg", alt: "FIAT Fastback Abarth: Detalle de faro delantero y parrilla" },
+      { src: "/images/abarth/exterior/abarth-exterior-03.jpg", alt: "FIAT Fastback Abarth: Detalle de la parrilla con logo Abarth" },
+      { src: "/images/abarth/exterior/abarth-exterior-06.jpg", alt: "FIAT Fastback Abarth: Detalle de la llanta" },
+      { src: "/images/abarth/exterior/abarth-exterior-05.jpg", alt: "FIAT Fastback Abarth: Vista del motor bajo el capó" },
+      { src: "/images/abarth/interior/abarth-interior-04.jpg", alt: "FIAT Fastback Abarth: Vista amplia del tablero, volante y asientos" },
+      { src: "/images/abarth/interior/abarth-interior-06.jpg", alt: "FIAT Fastback Abarth: Detalle del centro del volante con logo Abarth" },
+      { src: "/images/abarth/interior/abarth-interior-03.jpg", alt: "FIAT Fastback Abarth: Tablero de instrumentos digital" },
+      { src: "/images/abarth/interior/abarth-interior-01.jpg", alt: "FIAT Fastback Abarth: Asientos delanteros con logo Abarth" },
+      { src: "/images/abarth/interior/abarth-interior-02.jpg", alt: "FIAT Fastback Abarth: Cargador inalámbrico y palanca de cambios" },
+      { src: "/images/abarth/interior/abarth-interior-05.jpg", alt: "FIAT Fastback Abarth: Detalle del panel de puerta y controles de vidrios" },
     ],
-    fichaTecnicaPdf: null,
+    fichaTecnicaPdf: "/docs/ficha_tecnica_fastback_abarth.jpg",
     seguridad: null,
     garantia: "36 meses o 100.000 km, lo que ocurra primero.",
     // El cliente confirmo que Abarth viene en los mismos rojo/negro/blanco
     // que los demas modelos -- se reusan los mismos nombres+hex en vez de
     // inventar unos nuevos.
     colores: [color("Blanco Banchisa"), color("Negro Vulcano"), color("Rojo Montecarlo")],
+    // Especificaciones de la ficha tecnica escaneada del cliente
+    // (2026-09-03) -- version unica, sin variantes, se muestra como una
+    // sola "version" para reusar la misma tabla que Cronos/Pulse/Argo.
+    versions: [
+      {
+        name: "1.3 T270 Turbo",
+        specs: [
+          { label: "Motor", value: "1.3 T270 Turbo, 4 en línea, 4 válvulas/cilindro, 1.332 cc" },
+          { label: "Potencia máxima", value: "185 CV" },
+          { label: "Par máximo", value: "270 Nm / 1.750 rpm" },
+          { label: "Distribución", value: "Cadena" },
+          { label: "Alimentación", value: "Inyección electrónica multipunto, gasolina" },
+          { label: "Dirección", value: "Eléctrica con piñón y cremallera, diámetro de giro 10,7 m" },
+          { label: "Suspensión delantera", value: "Independiente McPherson, brazos oscilantes transversales, resortes helicoidales y barra estabilizadora" },
+          { label: "Suspensión trasera", value: "Eje de torsión con ruedas semi independientes, resortes helicoidales" },
+          { label: "Frenos (delantero / trasero)", value: "Disco 305 mm / Tambor 203 mm" },
+          { label: "Transmisión", value: "4x2 delantera, automática de 6 vel. con convertidor de par" },
+          { label: "Neumáticos", value: "215/45 R18 93V" },
+          { label: "Tanque de combustible", value: "47 l" },
+          { label: "Peso en orden de marcha", value: "1.310 kg" },
+          { label: "Capacidad de baúl", value: "600 l" },
+          { label: "Dimensiones (largo × ancho × alto)", value: "4.440 × 1.780 × 1.545 mm" },
+          { label: "Distancia entre ejes", value: "2.530 mm" },
+        ],
+      },
+    ],
     videos: [
       {
         src: "/videos/abarth-alerta-de-saida-de-faixa.mp4",

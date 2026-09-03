@@ -1,6 +1,7 @@
 ---
 import type { ModelData } from "../data/models";
 import Gallery from "./Gallery.astro";
+import SpecVersions from "./SpecVersions.astro";
 
 interface Props {
   model: ModelData;
@@ -70,6 +71,15 @@ const { model, reverse = false } = Astro.props;
         </div>
       </div>
     </div>
+
+    {model.versions && model.versions.length > 0 && (
+      <div class="mt-8 rounded-xl border border-neutral-200 bg-white p-5 shadow-sm">
+        <h3 class="text-lg font-semibold text-ink mb-3">
+          {model.versions.length > 1 ? "Versiones y especificaciones" : "Especificaciones"}
+        </h3>
+        <SpecVersions id={model.slug} versions={model.versions} />
+      </div>
+    )}
 
     <div class="mt-8 rounded-xl border border-neutral-200 bg-white p-5 shadow-sm">
       <h3 class="text-lg font-semibold text-ink mb-3">Carta de colores</h3>

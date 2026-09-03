@@ -1,0 +1,76 @@
+---
+import type { ModelVersion } from "../data/models";
+
+interface Props {
+  id: string;
+  versions: ModelVersion[];
+  dark?: boolean;
+}
+
+const { id, versions, dark = false } = Astro.props;
+---
+
+<div class="spec-versions" data-spec-id={id}>
+  {versions.length > 1 && (
+    <div class="flex flex-wrap gap-2 mb-4">
+      {versions.map((v, i) => (
+        <button
+          type="button"
+          class="spec-version-btn rounded-full border px-4 py-1.5 text-sm font-medium transition-colors"
+          class:list={
+            dark
+              ? [i === 0 ? "bg-abarth-yellow text-abarth-bg border-abarth-yellow" : "border-white/30 text-white/70 hover:border-abarth-yellow"]
+              : [i === 0 ? "bg-ink text-white border-ink" : "border-neutral-300 text-ink-soft hover:border-ink"]
+          }
+          data-index={i}
+        >
+          {v.name}
+        </button>
+      ))}
+    </div>
+  )}
+
+  {versions.map((v, i) => (
+    <div class="spec-table" class:list={[i === 0 ? "block" : "hidden"]} data-index={i}>
+      <dl class:list={["divide-y text-sm", dark ? "divide-white/15" : "divide-neutral-200"]}>
+        {v.specs.map((s) => (
+          <div class="flex flex-col gap-0.5 py-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+            <dt class:list={dark ? "text-white/60" : "text-ink-soft"}>{s.label}</dt>
+            <dd class:list={["font-medium sm:text-right", dark ? "text-white" : "text-ink"]}>{s.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  ))}
+</div>
+
+<script>
+  function setupSpecVersions(root: HTMLElement) {
+    const btns = Array.from(root.querySelectorAll<HTMLButtonElement>(".spec-version-btn"));
+    const tables = Array.from(root.querySelectorAll<HTMLElement>(".spec-table"));
+    const dark = root.closest(".abarth-gallery") !== null;
+
+    const activeClasses = dark
+      ? ["bg-abarth-yellow", "text-abarth-bg", "border-abarth-yellow"]
+      : ["bg-ink", "text-white", "border-ink"];
+    const inactiveClasses = dark
+      ? ["border-white/30", "text-white/70"]
+      : ["border-neutral-300", "text-ink-soft"];
+
+    btns.forEach((btn, idx) => {
+      btn.addEventListener("click", () => {
+        btns.forEach((b, i) => {
+          const isActive = i === idx;
+          activeClasses.forEach((c) => b.classList.toggle(c, isActive));
+          inactiveClasses.forEach((c) => b.classList.toggle(c, !isActive));
+        });
+        tables.forEach((t, i) => {
+          t.classList.toggle("hidden", i !== idx);
+          t.classList.toggle("block", i === idx);
+        });
+      });
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>(".spec-versions").forEach(setupSpecVersions);
+</script>
