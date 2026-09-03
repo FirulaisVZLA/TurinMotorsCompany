@@ -2,6 +2,7 @@
 import type { ModelData } from "../data/models";
 import Gallery from "./Gallery.astro";
 import SpecVersions from "./SpecVersions.astro";
+import SpecVersionTabs from "./SpecVersionTabs.astro";
 
 interface Props {
   model: ModelData;
@@ -21,6 +22,9 @@ const { model, reverse = false } = Astro.props;
          en AbarthSection.astro. -->
     <div class="grid gap-8 lg:grid-cols-2 items-start">
       <div class:list={[reverse ? "lg:order-2" : "lg:order-1"]}>
+        {model.versions && model.versions.length > 1 && (
+          <SpecVersionTabs id={model.slug} versions={model.versions} />
+        )}
         <Gallery id={model.slug} images={model.gallery} />
 
         {model.fichaTecnicaPdf ? (
