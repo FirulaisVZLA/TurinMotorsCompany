@@ -41,11 +41,14 @@ export interface SpecItem {
 
 // Una "version" es una variante/trim del mismo modelo con su propia ficha
 // tecnica (ej. Cronos: Like/Drive Plus/Stile/Precision) -- se muestra como
-// botones clicables sobre una tabla de especificaciones que cambia, sin
-// galeria de fotos propia (las fotos del modelo se quedan fijas).
+// botones clicables sobre una tabla de especificaciones que cambia. La
+// galeria principal del modelo se queda fija; `gallery` aqui es opcional,
+// solo para versiones con fotos propias (ej. Argo Endurance), se muestra
+// como una cuadricula chica debajo de la tabla de specs de esa version.
 export interface ModelVersion {
   name: string;
   specs: SpecItem[];
+  gallery?: GalleryImage[];
 }
 
 export interface ModelData {
@@ -151,8 +154,8 @@ export const models: ModelData[] = [
     garantia: "36 meses o 100.000 km, lo que ocurra primero.",
     colores: [color("Blanco Banchisa"), color("Negro Vulcano"), color("Rojo Montecarlo"), color("Gris Silverstone")],
     // Ficha tecnica del cliente (2026-09-03) trae 2 columnas: Trekking y
-    // Endurance -- Endurance no tiene fotos propias todavia (el cliente
-    // pidio ignorarlas en la ronda anterior), pero si sus especificaciones.
+    // Endurance. Endurance ahora si tiene sus propias fotos (carpeta
+    // Argo/endurance del cliente, agregadas 2026-09-03).
     versions: [
       {
         name: "Trekking",
@@ -186,6 +189,12 @@ export const models: ModelData[] = [
           { label: "Tanque de combustible", value: "47 l" },
           { label: "Peso en orden de marcha", value: "1.131 kg" },
           { label: "Capacidad de baúl", value: "300 l" },
+        ],
+        gallery: [
+          { src: "/images/argo-endurance/argo-endurance-01.jpg", alt: "FIAT Argo Endurance: Vista frontal 3/4" },
+          { src: "/images/argo-endurance/argo-endurance-02.jpg", alt: "FIAT Argo Endurance: Detalle del faro delantero" },
+          { src: "/images/argo-endurance/argo-endurance-03.jpg", alt: "FIAT Argo Endurance: Vista del motor bajo el capó" },
+          { src: "/images/argo-endurance/argo-endurance-04.webp", alt: "FIAT Argo Endurance: Pantalla de cámara de retroceso" },
         ],
       },
     ],
@@ -375,7 +384,7 @@ export const models: ModelData[] = [
       { src: "/images/toro/interior/toro-interior-06.jpg", alt: "FIAT Toro: Detalle del freno de estacionamiento electrónico" },
       { src: "/images/toro/interior/toro-interior-07.jpg", alt: "FIAT Toro: Botones de tracción 4x4" },
     ],
-    fichaTecnicaPdf: null,
+    fichaTecnicaPdf: "/docs/ficha_tecnica_toro.pdf",
     seguridad: null,
     garantia: "36 meses o 100.000 km, lo que ocurra primero.",
     colores: [
@@ -386,6 +395,26 @@ export const models: ModelData[] = [
       color("Gris Granite Crystal"),
       color("Azul Jazz"),
       color("Gris Sting"),
+    ],
+    // Ficha tecnica escaneada del cliente (2026-09-03) -- version unica
+    // (Freedom T270), sin variantes.
+    versions: [
+      {
+        name: "Freedom T270",
+        specs: [
+          { label: "Cabina", value: "Doble / 4 puertas" },
+          { label: "Motor", value: "Firefly T270 16v, 4 en línea, 4 válvulas/cilindro, 1.332 cc" },
+          { label: "Potencia máxima", value: "173 CV / 5.750 rpm" },
+          { label: "Par máximo", value: "270 Nm / 1.850 rpm" },
+          { label: "Distribución", value: "Cadena; árbol de levas Multiair III en admisión y 1 a la cabeza en escape" },
+          { label: "Alimentación", value: "Inyección electrónica digital incorporada, gasolina" },
+          { label: "Dirección", value: "Asistencia eléctrica, diámetro de giro 12,2 m" },
+          { label: "Suspensión delantera", value: "Independiente McPherson con barra estabilizadora, amortiguadores hidráulicos presurizados y resortes helicoidales" },
+          { label: "Suspensión trasera", value: "Independiente Multi-link con barra estabilizadora, amortiguadores hidráulicos presurizados y resortes helicoidales" },
+          { label: "Frenos (delantero / trasero)", value: "Disco ventilado Ø305 mm / Tambor Ø295 mm" },
+          { label: "Transmisión", value: "4x2 delantera, caja automática de 6 velocidades" },
+        ],
+      },
     ],
   },
   {
