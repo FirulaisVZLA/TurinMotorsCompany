@@ -9,6 +9,7 @@ interface Props {
 }
 
 const { model } = Astro.props;
+const hasMultipleVersions = !!model.versions && model.versions.length > 1;
 ---
 
 <section id="abarth" class="bg-abarth-bg text-white">
@@ -30,10 +31,17 @@ const { model } = Astro.props;
   <div class="py-16 px-4 sm:px-6 lg:px-8">
     <div class="mx-auto max-w-5xl abarth-gallery">
       <h2 class="text-2xl sm:text-3xl font-bold text-white mb-6">FIAT Fastback Abarth</h2>
-      {model.versions && model.versions.length > 1 && (
-        <SpecVersionTabs id={model.slug} versions={model.versions} dark />
+      {hasMultipleVersions && <SpecVersionTabs id={model.slug} versions={model.versions!} dark />}
+
+      {hasMultipleVersions ? (
+        model.versions!.map((v, i) => (
+          <div class="version-panel" class:list={[i === 0 ? "block" : "hidden"]} data-content-for={model.slug} data-index={i}>
+            <Gallery id={`${model.slug}-v${i}`} images={v.gallery ?? model.gallery} />
+          </div>
+        ))
+      ) : (
+        <Gallery id={model.slug} images={model.gallery} />
       )}
-      <Gallery id={model.slug} images={model.gallery} />
 
       {model.videos && model.videos.length > 0 && (
         <div class="mt-8">

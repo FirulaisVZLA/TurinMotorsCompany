@@ -10,26 +10,20 @@ interface Props {
 const { id, versions, dark = false } = Astro.props;
 ---
 
-<div class="spec-content" data-content-for={id}>
-  {versions.map((v, i) => (
-    <div class="spec-table" class:list={[i === 0 ? "block" : "hidden"]} data-index={i}>
-      {v.gallery && v.gallery.length > 0 && (
-        <div class="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
-          {v.gallery.map((img) => (
-            <div class="aspect-video overflow-hidden rounded-md bg-neutral-100 shadow-sm">
-              <img src={img.src} alt={img.alt} class="h-full w-full object-contain" loading="lazy" />
-            </div>
-          ))}
+{versions.map((v, i) => (
+  <div
+    class="version-panel"
+    class:list={[i === 0 ? "block" : "hidden"]}
+    data-content-for={id}
+    data-index={i}
+  >
+    <dl class:list={["divide-y text-sm", dark ? "divide-white/15" : "divide-neutral-200"]}>
+      {v.specs.map((s) => (
+        <div class="flex flex-col gap-0.5 py-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+          <dt class:list={dark ? "text-white/60" : "text-ink-soft"}>{s.label}</dt>
+          <dd class:list={["font-medium sm:text-right", dark ? "text-white" : "text-ink"]}>{s.value}</dd>
         </div>
-      )}
-      <dl class:list={["divide-y text-sm", dark ? "divide-white/15" : "divide-neutral-200"]}>
-        {v.specs.map((s) => (
-          <div class="flex flex-col gap-0.5 py-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
-            <dt class:list={dark ? "text-white/60" : "text-ink-soft"}>{s.label}</dt>
-            <dd class:list={["font-medium sm:text-right", dark ? "text-white" : "text-ink"]}>{s.value}</dd>
-          </div>
-        ))}
-      </dl>
-    </div>
-  ))}
-</div>
+      ))}
+    </dl>
+  </div>
+))}

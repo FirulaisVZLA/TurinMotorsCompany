@@ -31,17 +31,17 @@ const { id, versions, dark = false } = Astro.props;
 
 <script>
   // Los botones de version viven arriba de la galeria (pedido del cliente
-  // el 2026-09-03, mejora la estetica), pero controlan la tabla de specs
-  // que esta mas abajo en SpecVersions.astro -- se enlazan por el mismo
-  // `id` (model.slug) via data-tabs-for / data-content-for, no por
-  // anidamiento en el DOM.
+  // el 2026-09-03/04), y controlan TODOS los paneles marcados
+  // data-content-for="{id}" -- pueden ser la tabla de specs (SpecVersions.astro)
+  // Y la galeria de fotos de esa version (ModelSection/AbarthSection.astro,
+  // una <Gallery> por version), no importa donde vivan en el DOM, mientras
+  // compartan el mismo `id` (model.slug) y el mismo `data-index`.
   function setupSpecVersionTabs(tabsEl: HTMLElement) {
     const id = tabsEl.dataset.tabsFor;
-    const content = document.querySelector<HTMLElement>(`[data-content-for="${id}"]`);
-    if (!content) return;
+    const panels = Array.from(document.querySelectorAll<HTMLElement>(`.version-panel[data-content-for="${id}"]`));
+    if (panels.length === 0) return;
 
     const btns = Array.from(tabsEl.querySelectorAll<HTMLButtonElement>(".spec-version-btn"));
-    const tables = Array.from(content.querySelectorAll<HTMLElement>(".spec-table"));
     const dark = tabsEl.closest(".abarth-gallery") !== null;
 
     const activeClasses = dark
@@ -58,9 +58,10 @@ const { id, versions, dark = false } = Astro.props;
           activeClasses.forEach((c) => b.classList.toggle(c, isActive));
           inactiveClasses.forEach((c) => b.classList.toggle(c, !isActive));
         });
-        tables.forEach((t, i) => {
-          t.classList.toggle("hidden", i !== idx);
-          t.classList.toggle("block", i === idx);
+        panels.forEach((p) => {
+          const panelIndex = Number(p.dataset.index);
+          p.classList.toggle("hidden", panelIndex !== idx);
+          p.classList.toggle("block", panelIndex === idx);
         });
       });
     });
