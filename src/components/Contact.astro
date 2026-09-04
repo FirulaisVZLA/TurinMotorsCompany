@@ -51,10 +51,12 @@ const dayNames: Record<string, string> = {
             <span class="italic">pendiente</span>
           )}
         </p>
-        <div class="flex gap-4 pt-2">
-          <a href={siteInfo.social.instagram} target="_blank" rel="noopener" class="text-ink hover:text-accent">Instagram</a>
-          <a href={siteInfo.social.tiktok} target="_blank" rel="noopener" class="text-ink hover:text-accent">TikTok</a>
-        </div>
+        <p class="pt-2">
+          <strong class="text-ink">Redes Sociales:</strong>{" "}
+          <a href={siteInfo.social.instagram} target="_blank" rel="noopener" class="text-accent hover:text-accent-dark">Instagram</a>
+          {" "}
+          <a href={siteInfo.social.tiktok} target="_blank" rel="noopener" class="text-accent hover:text-accent-dark">TikTok</a>
+        </p>
       </div>
 
       <div class="rounded-xl overflow-hidden border border-neutral-200 shadow-sm min-h-64">
