@@ -119,6 +119,30 @@ export const models: ModelData[] = [
     ],
     garantia: "36 meses o 100.000 km, lo que ocurra primero.",
     colores: [color("Blanco Banchisa"), color("Negro Vulcano"), color("Rojo Montecarlo"), color("Gris Silverstone")],
+    // Especificaciones de la ficha tecnica del cliente -- version unica
+    // (Trekking), sin variantes.
+    versions: [
+      {
+        name: "Trekking 1.0",
+        specs: [
+          { label: "Carrocería", value: "5 puertas" },
+          { label: "Motor", value: "1.0 8V, 4 en línea, 2 válvulas/cilindro, 999,1 cc" },
+          { label: "Potencia máxima", value: "69,3 CV / 6.250 rpm" },
+          { label: "Par máximo", value: "92 Nm / 4.000 rpm" },
+          { label: "Distribución", value: "Correa dentada" },
+          { label: "Alimentación", value: "Inyección electrónica multipunto, gasolina" },
+          { label: "Dirección", value: "Hidráulica, diámetro de giro 9,96 m" },
+          { label: "Suspensión delantera", value: "McPherson con ruedas independientes, basculantes inferiores y barras transversales con barra estabilizadora" },
+          { label: "Suspensión trasera", value: "Eje de torsión con ruedas semi independientes, resortes helicoidales" },
+          { label: "Frenos (delantero / trasero)", value: "Disco / Tambor" },
+          { label: "Transmisión", value: "Delantera con juntas homocinéticas, manual de 5 velocidades" },
+          { label: "Neumáticos", value: "175/65 R14" },
+          { label: "Tanque de combustible", value: "47 l" },
+          { label: "Peso en orden de marcha", value: "963 kg" },
+          { label: "Capacidad de baúl", value: "200 l" },
+        ],
+      },
+    ],
   },
   {
     slug: "argo-trekking",
@@ -266,6 +290,28 @@ export const models: ModelData[] = [
     seguridad: null,
     garantia: "36 meses o 100.000 km, lo que ocurra primero.",
     colores: null,
+    // Especificaciones de la ficha tecnica escaneada del cliente
+    // (2026-09-03) -- version unica, sin variantes. Se habia agregado el
+    // PDF pero se quedo pendiente pasar los datos a la tabla, corregido
+    // el 2026-09-04.
+    versions: [
+      {
+        name: "1.3 8V Fire Evo",
+        specs: [
+          { label: "Motor", value: "1.3 8V Fire Evo, 4 en línea, relación de compresión 11,1:1, 1.332 cc" },
+          { label: "Potencia máxima", value: "99 CV / 6.000 rpm" },
+          { label: "Par máximo", value: "13,0 kgm / 4.000 rpm" },
+          { label: "Distribución", value: "Cadena, árbol de levas 1 en la culata" },
+          { label: "Alimentación", value: "Inyección electrónica multipunto, bencina" },
+          { label: "Dirección", value: "Mecánica con piñón y cremallera, diámetro de giro 10,9 m" },
+          { label: "Suspensión delantera", value: "Independiente McPherson, brazos oscilantes transversales, barra estabilizadora, amortiguadores de doble efecto y resortes helicoidales" },
+          { label: "Suspensión trasera", value: "Eje rígido, amortiguadores telescópicos de doble efecto y elástico parabólico longitudinal" },
+          { label: "Transmisión", value: "Delantera con juntas homocinéticas, caja manual de 5 marchas + reversa, embrague monodisco a seco con control hidráulico" },
+          { label: "Relaciones de caja (1ª a 5ª)", value: "4,273 / 2,429 / 1,520 / 1,029 / 0,756 -- reversa 4,200, diferencial 4,400" },
+          { label: "Neumáticos", value: "175/70 R14 88T" },
+        ],
+      },
+    ],
   },
   {
     slug: "pulse",
@@ -361,6 +407,30 @@ export const models: ModelData[] = [
       color("Gris Strato"),
       color("Gris Silverstone"),
       color("Plata Bari"),
+    ],
+    // Especificaciones de la ficha tecnica del cliente -- version unica
+    // (Impetus T200), sin variantes.
+    versions: [
+      {
+        name: "Impetus T200",
+        specs: [
+          { label: "Carrocería", value: "5 puertas" },
+          { label: "Motor", value: "1.0 T200, 3 en línea, 4 válvulas/cilindro, 999 cc" },
+          { label: "Potencia máxima", value: "120 CV / 5.750 rpm" },
+          { label: "Par máximo", value: "200 Nm / 1.750 rpm" },
+          { label: "Distribución", value: "Cadena \"for life\"" },
+          { label: "Alimentación", value: "Inyección electrónica multipunto, gasolina" },
+          { label: "Dirección", value: "Asistencia eléctrica, diámetro de giro 10,5 m" },
+          { label: "Suspensión delantera", value: "Independiente McPherson con brazos oscilantes transversales, resortes helicoidales y barra estabilizadora" },
+          { label: "Suspensión trasera", value: "Eje de torsión con ruedas semi independientes, resortes helicoidales" },
+          { label: "Frenos (delantero / trasero)", value: "Disco / Tambor autocentrante" },
+          { label: "Transmisión", value: "4x2 delantera, caja CVT de 7 velocidades" },
+          { label: "Neumáticos", value: "215/45 R18" },
+          { label: "Tanque de combustible", value: "47 l" },
+          { label: "Peso en orden de marcha", value: "1.261 kg" },
+          { label: "Capacidad de baúl", value: "600 l" },
+        ],
+      },
     ],
   },
   {
