@@ -90,19 +90,19 @@ function color(name: string): ColorOption {
 export const models: ModelData[] = [
   {
     slug: "mobi",
-    name: "Mobi",
+    name: "Mobi Trekking",
     gallery: [
-      { src: "/images/mobi/exterior/mobi-exterior-01.jpg", alt: "FIAT Mobi: Vista frontal 3/4 en estudio" },
-      { src: "/images/mobi/exterior/mobi-exterior-04.jpg", alt: "FIAT Mobi: Vista trasera 3/4 en estudio" },
-      { src: "/images/mobi/exterior/mobi-exterior-05.jpg", alt: "FIAT Mobi: Detalle de rueda delantera y faro antiniebla" },
-      { src: "/images/mobi/exterior/mobi-exterior-03.jpg", alt: "FIAT Mobi: Detalle de la llanta trasera" },
-      { src: "/images/mobi/exterior/mobi-exterior-02.jpg", alt: "FIAT Mobi: Detalle del faro delantero" },
-      { src: "/images/mobi/interior/mobi-interior-06.jpg", alt: "FIAT Mobi: Vista amplia del volante, tablero y pantalla multimedia" },
-      { src: "/images/mobi/interior/mobi-interior-04.jpg", alt: "FIAT Mobi: Volante y tablero de instrumentos (vista cercana)" },
-      { src: "/images/mobi/interior/mobi-interior-05.jpg", alt: "FIAT Mobi: Detalle del tablero de instrumentos digital" },
-      { src: "/images/mobi/interior/mobi-interior-03.jpg", alt: "FIAT Mobi: Pantalla multimedia con Apple CarPlay" },
-      { src: "/images/mobi/interior/mobi-interior-02.jpg", alt: "FIAT Mobi: Controles de aire acondicionado" },
-      { src: "/images/mobi/interior/mobi-interior-01.jpg", alt: "FIAT Mobi: Palanca de cambios" },
+      { src: "/images/mobi/exterior/mobi-exterior-01.jpg", alt: "FIAT Mobi Trekking: Vista frontal 3/4 en estudio" },
+      { src: "/images/mobi/exterior/mobi-exterior-04.jpg", alt: "FIAT Mobi Trekking: Vista trasera 3/4 en estudio" },
+      { src: "/images/mobi/exterior/mobi-exterior-05.jpg", alt: "FIAT Mobi Trekking: Detalle de rueda delantera y faro antiniebla" },
+      { src: "/images/mobi/exterior/mobi-exterior-03.jpg", alt: "FIAT Mobi Trekking: Detalle de la llanta trasera" },
+      { src: "/images/mobi/exterior/mobi-exterior-02.jpg", alt: "FIAT Mobi Trekking: Detalle del faro delantero" },
+      { src: "/images/mobi/interior/mobi-interior-06.jpg", alt: "FIAT Mobi Trekking: Vista amplia del volante, tablero y pantalla multimedia" },
+      { src: "/images/mobi/interior/mobi-interior-04.jpg", alt: "FIAT Mobi Trekking: Volante y tablero de instrumentos (vista cercana)" },
+      { src: "/images/mobi/interior/mobi-interior-05.jpg", alt: "FIAT Mobi Trekking: Detalle del tablero de instrumentos digital" },
+      { src: "/images/mobi/interior/mobi-interior-03.jpg", alt: "FIAT Mobi Trekking: Pantalla multimedia con Apple CarPlay" },
+      { src: "/images/mobi/interior/mobi-interior-02.jpg", alt: "FIAT Mobi Trekking: Controles de aire acondicionado" },
+      { src: "/images/mobi/interior/mobi-interior-01.jpg", alt: "FIAT Mobi Trekking: Palanca de cambios" },
     ],
     fichaTecnicaPdf: "/docs/ficha_tecnica_mobi.pdf",
     seguridad: [
@@ -248,10 +248,11 @@ export const models: ModelData[] = [
     ],
     garantia: "36 meses o 100.000 km, lo que ocurra primero.",
     colores: [color("Blanco Alaska"), color("Negro Vulcano"), color("Gris Silverstone"), color("Plata Bari")],
-    // Ficha tecnica del cliente (2026-09-03): 4 versiones. Las especificaciones
-    // mecanicas son identicas entre versiones salvo la caja de cambios
-    // (Like/Drive Plus/Stile = manual, Precision = CVT), tal como aparece
-    // en la ficha.
+    // Catalogo de modelos del concesionario (2026-09-05): el Cronos solo se
+    // ofrece en 2 versiones, Like y Precision -- Drive Plus y Stile no
+    // forman parte del catalogo y se eliminaron. Especificaciones mecanicas
+    // identicas entre ambas salvo la caja de cambios (Like = manual,
+    // Precision = CVT), tal como aparece en la ficha tecnica.
     versions: (() => {
       const sharedSpecs: SpecItem[] = [
         { label: "Motor", value: "4 en línea, 2 válvulas/cilindro, 1.332 cc" },
@@ -265,7 +266,7 @@ export const models: ModelData[] = [
         { label: "Suspensión trasera", value: "Eje de torsión con ruedas semi independientes, amortiguadores y resortes helicoidales" },
         { label: "Frenos (delantero / trasero)", value: "Discos ventilados / Tambor" },
       ];
-      return ["Like", "Drive Plus", "Stile", "Precision"].map((name) => ({
+      return ["Like", "Precision"].map((name) => ({
         name,
         specs: [{ label: "Caja de cambios", value: name === "Precision" ? "CVT" : "Manual" }, ...sharedSpecs],
       }));
@@ -273,7 +274,7 @@ export const models: ModelData[] = [
   },
   {
     slug: "fiorino",
-    name: "Fiorino",
+    name: "Fiorino Endurance",
     gallery: [
       { src: "/images/fiorino/exterior/fiorino-exterior-01.jpg", alt: "FIAT Fiorino: Vista frontal recta" },
       { src: "/images/fiorino/exterior/fiorino-exterior-04.jpg", alt: "FIAT Fiorino: Vista trasera 3/4" },
@@ -299,6 +300,7 @@ export const models: ModelData[] = [
         name: "1.3 8V Fire Evo",
         specs: [
           { label: "Motor", value: "1.3 8V Fire Evo, 4 en línea, relación de compresión 11,1:1, 1.332 cc" },
+          { label: "Caja de cambios", value: "Manual (MT), 5 marchas + reversa" },
           { label: "Potencia máxima", value: "99 CV / 6.000 rpm" },
           { label: "Par máximo", value: "13,0 kgm / 4.000 rpm" },
           { label: "Distribución", value: "Cadena, árbol de levas 1 en la culata" },
@@ -333,45 +335,36 @@ export const models: ModelData[] = [
       color("Gris Silverstone"),
       color("Gris Strato"),
     ],
-    // Ficha tecnica del cliente (2026-09-03): 5 versiones, 2 motores
-    // distintos (1.3 Firefly atmosferico en Drive/S-Design, 1.0 T200 turbo
-    // en Audace/Impetus).
-    versions: (() => {
-      const sharedSpecs: SpecItem[] = [
-        { label: "Distribución", value: "Cadena \"for life\"" },
-        { label: "Alimentación", value: "Inyección electrónica multipunto, nafta" },
-        { label: "Dirección", value: "Asistencia eléctrica, diámetro de giro 10,5 m" },
-        { label: "Suspensión delantera", value: "Independiente McPherson, brazos oscilantes transversales, resortes helicoidales y barra estabilizadora" },
-        { label: "Suspensión trasera", value: "Eje de torsión con ruedas semi independientes, resortes helicoidales" },
-        { label: "Frenos (delantero / trasero)", value: "Disco sólido / Tambor" },
-        { label: "Tracción", value: "4x2 delantera" },
-        { label: "Tanque de combustible", value: "47 l" },
-        { label: "Capacidad de baúl", value: "370 l" },
-      ];
-      const atmospheric: SpecItem[] = [
-        { label: "Motor", value: "1.3 Firefly, 4 en línea, 2 válvulas/cilindro, 1.332 cc" },
-        { label: "Potencia máxima", value: "99 CV / 6.000 rpm" },
-        { label: "Par máximo", value: "128 Nm / 4.000 rpm" },
-        { label: "Neumáticos", value: "195/60 R16" },
-      ];
-      const turbo: SpecItem[] = [
-        { label: "Motor", value: "1.0 T200 Turbonafta, 3 en línea, 4 válvulas/cilindro, 999 cc" },
-        { label: "Potencia máxima", value: "120 CV / 5.750 rpm" },
-        { label: "Par máximo", value: "200 Nm / 1.750 rpm" },
-        { label: "Neumáticos", value: "205/50 R17" },
-      ];
-      return [
-        { name: "Drive MT", specs: [...atmospheric, { label: "Caja de cambios", value: "Manual, 5 vel." }, { label: "Peso en orden de marcha", value: "1.140 kg" }, ...sharedSpecs] },
-        { name: "Drive AT", specs: [...atmospheric, { label: "Caja de cambios", value: "CVT, 7 vel." }, { label: "Peso en orden de marcha", value: "1.187 kg" }, ...sharedSpecs] },
-        { name: "S-Design AT", specs: [...atmospheric, { label: "Caja de cambios", value: "CVT, 7 vel." }, { label: "Peso en orden de marcha", value: "1.187 kg" }, ...sharedSpecs] },
-        { name: "Audace Turbo AT", specs: [...turbo, { label: "Caja de cambios", value: "CVT, 7 vel." }, { label: "Peso en orden de marcha", value: "1.234 kg" }, ...sharedSpecs] },
-        { name: "Impetus Turbo AT", specs: [...turbo, { label: "Caja de cambios", value: "CVT, 7 vel." }, { label: "Peso en orden de marcha", value: "1.237 kg" }, ...sharedSpecs] },
-      ];
-    })(),
+    // El cliente confirmo (2026-09-05) que el Pulse del catalogo del
+    // concesionario es solo la version Audace T-200 -- Drive MT/AT,
+    // S-Design AT e Impetus Turbo AT no forman parte del catalogo y se
+    // eliminaron (junto con sus botones de version).
+    versions: [
+      {
+        name: "Audace T-200",
+        specs: [
+          { label: "Motor", value: "1.0 T200 Turbonafta, 3 en línea, 4 válvulas/cilindro, 999 cc" },
+          { label: "Potencia máxima", value: "120 CV / 5.750 rpm" },
+          { label: "Par máximo", value: "200 Nm / 1.750 rpm" },
+          { label: "Neumáticos", value: "205/50 R17" },
+          { label: "Caja de cambios", value: "CVT, 7 vel." },
+          { label: "Peso en orden de marcha", value: "1.234 kg" },
+          { label: "Distribución", value: "Cadena \"for life\"" },
+          { label: "Alimentación", value: "Inyección electrónica multipunto, nafta" },
+          { label: "Dirección", value: "Asistencia eléctrica, diámetro de giro 10,5 m" },
+          { label: "Suspensión delantera", value: "Independiente McPherson, brazos oscilantes transversales, resortes helicoidales y barra estabilizadora" },
+          { label: "Suspensión trasera", value: "Eje de torsión con ruedas semi independientes, resortes helicoidales" },
+          { label: "Frenos (delantero / trasero)", value: "Disco sólido / Tambor" },
+          { label: "Tracción", value: "4x2 delantera" },
+          { label: "Tanque de combustible", value: "47 l" },
+          { label: "Capacidad de baúl", value: "370 l" },
+        ],
+      },
+    ],
   },
   {
     slug: "fastback",
-    name: "Fastback",
+    name: "Fastback Impetus",
     gallery: [
       { src: "/images/fastback/exterior/fastback-exterior-01.jpg", alt: "FIAT Fastback: Vista frontal 3/4 superior" },
       { src: "/images/fastback/exterior/fastback-exterior-02.jpg", alt: "FIAT Fastback: Vista trasera 3/4" },
@@ -435,7 +428,7 @@ export const models: ModelData[] = [
   },
   {
     slug: "toro",
-    name: "Toro",
+    name: "Toro Freedom",
     gallery: [
       { src: "/images/toro/exterior/toro-exterior-06.jpg", alt: "FIAT Toro: Vista frontal recta" },
       { src: "/images/toro/exterior/toro-exterior-08.jpg", alt: "FIAT Toro: Vista trasera 3/4" },
@@ -494,7 +487,11 @@ export const models: ModelData[] = [
     // "Fastback Abarth" (motor 1.3 T270 turbo, trim ABARTH del Fastback),
     // no un modelo "Abarth" generico -- la matricula "FASTBACK" que salia
     // en una de las fotos no era un error, era correcta.
-    name: "Fastback Abarth",
+    // Nombre corto para el menu fijo del header (pedido del cliente
+    // 2026-09-05): con "Mobi Trekking" ya en el menu, "Fastback Abarth"
+    // completo lo hacia ver muy apretado -- el titulo dentro de la seccion
+    // (AbarthSection.astro) se queda como "Fastback Abarth".
+    name: "Abarth",
     gallery: [
       { src: "/images/abarth/extra/abarth-extra-01.jpg", alt: "FIAT Fastback Abarth: Vista frontal 3/4 en movimiento" },
       { src: "/images/abarth/exterior/abarth-exterior-01.jpg", alt: "FIAT Fastback Abarth: Vista trasera recta" },

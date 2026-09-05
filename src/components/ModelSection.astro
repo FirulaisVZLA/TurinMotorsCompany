@@ -15,7 +15,7 @@ const hasMultipleVersions = !!model.versions && model.versions.length > 1;
 
 <section id={model.slug} class="scroll-mt-20 py-16 px-4 sm:px-6 lg:px-8 border-t border-neutral-200">
   <div class="mx-auto max-w-5xl">
-    <h2 class="text-2xl sm:text-3xl font-bold text-ink mb-6">FIAT {model.name}</h2>
+    <h2 class="text-2xl sm:text-3xl font-bold text-ink mb-6">{model.name}</h2>
 
     <!-- Galeria y fichas de un lado, Seguridad/Garantia/Especificaciones del
          otro -- alterna izquierda/derecha modelo por modelo (prop `reverse`)
