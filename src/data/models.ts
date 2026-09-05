@@ -317,7 +317,7 @@ export const models: ModelData[] = [
   },
   {
     slug: "pulse",
-    name: "Pulse",
+    name: "Pulse Audace",
     gallery: [
       { src: "/images/pulse/extra/pulse-extra-04.webp", alt: "FIAT Pulse: Vista frontal 3/4" },
       { src: "/images/pulse/extra/pulse-extra-03.jpg", alt: "FIAT Pulse: Vista trasera 3/4" },
