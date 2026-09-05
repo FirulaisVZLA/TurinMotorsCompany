@@ -2,7 +2,12 @@
 import { models } from "../data/models";
 import { siteInfo } from "../data/site";
 
-const modelLinks = models.map((m) => ({ href: `#${m.slug}`, label: m.name }));
+// El navbar solo muestra la primera palabra de cada modelo (ej. "Mobi" en
+// vez de "Mobi Trekking") -- pedido del cliente el 2026-09-05, el cintillo
+// se veia demasiado largo con el nombre completo de cada version. El
+// titulo dentro de cada seccion (ModelSection/AbarthSection) sigue usando
+// model.name completo, sin recortar.
+const modelLinks = models.map((m) => ({ href: `#${m.slug}`, label: m.name.split(" ")[0] }));
 ---
 
 <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-neutral-200">
